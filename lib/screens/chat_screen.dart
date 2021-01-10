@@ -27,10 +27,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   return MessageTile(
-                    message: snapshot.data.documents[index].data()["message"],
-                    sender: snapshot.data.documents[index].data()["sender"],
+                    message: snapshot.data.documents[index].data["message"],
+                    sender: snapshot.data.documents[index].data["sender"],
                     sentByMe: widget.userName ==
-                        snapshot.data.documents[index].data()["sender"],
+                        snapshot.data.documents[index].data["sender"],
                   );
                 })
             : Container();
@@ -89,9 +89,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     Expanded(
                       child: TextField(
                         controller: messageEditingController,
+                        style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                             hintText: "Send a message ...",
                             hintStyle: TextStyle(
+                              color: Colors.white38,
                               fontSize: 16,
                             ),
                             border: InputBorder.none),

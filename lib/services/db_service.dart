@@ -9,15 +9,12 @@ class DBService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final CollectionReference groupCollection =
-      FirebaseFirestore.instance.collection('groups');
+  FirebaseFirestore.instance.collection('groups');
 
   // update userdata
-  Future updateUserData(String firstName, String lastName, String username,
-      String email, String password) async {
+  Future updateUserData(String fullName, String email, String password) async {
     return await userCollection.doc(uid).set({
-      'firstName': firstName,
-      'lastName': lastName,
-      'username': username,
+      'fullName': fullName,
       'email': email,
       'password': password,
       'groups': [],
@@ -26,11 +23,11 @@ class DBService {
   }
 
   // create group
-  Future createGroup(String name, String groupName) async {
+  Future createGroup(String userName, String groupName) async {
     DocumentReference groupDocRef = await groupCollection.add({
       'groupName': groupName,
       'groupIcon': '',
-      'admin': name,
+      'admin': userName,
       'members': [],
       //'messages': ,
       'groupId': '',
@@ -39,13 +36,14 @@ class DBService {
     });
 
     await groupDocRef.update({
-      'members': FieldValue.arrayUnion([uid + '_' + name]),
+      'members': FieldValue.arrayUnion([uid + '_' + userName]),
       'groupId': groupDocRef.id
     });
 
     DocumentReference userDocRef = userCollection.doc(uid);
     return await userDocRef.update({
-      'groups': FieldValue.arrayUnion([groupDocRef.id + '_' + groupName])
+      'groups':
+          FieldValue.arrayUnion([groupDocRef.id + '_' + groupName])
     });
   }
 

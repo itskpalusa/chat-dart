@@ -21,11 +21,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _isLoading = false;
 
   // text field state
-  String firstName = '';
-  String lastName = '';
+  String fullName = '';
   String email = '';
   String password = '';
-  String username = '';
   String error = '';
 
   _onRegister() async {
@@ -35,13 +33,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       });
 
       await _auth
-          .registerWithEmailAndPassword(
-              firstName, lastName, username, email, password)
+          .registerWithEmailAndPassword(fullName, email, password)
           .then((result) async {
         if (result != null) {
           await HelperFunctions.saveUserLoggedInSharedPreference(true);
           await HelperFunctions.saveUserEmailSharedPreference(email);
-          await HelperFunctions.saveUserNameSharedPreference(firstName);
+          await HelperFunctions.saveUserNameSharedPreference(fullName);
 
           print("Registered");
           await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
@@ -82,7 +79,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text("DashChat",
+                          Text("Create or Join Groups",
                               style: TextStyle(
                                   fontSize: 40.0, fontWeight: FontWeight.bold)),
                           SizedBox(height: 30.0),
@@ -90,30 +87,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           SizedBox(height: 20.0),
                           TextFormField(
                             decoration: ktextInputDecoration.copyWith(
-                                labelText: 'First Name'),
+                                labelText: 'Full Name'),
                             onChanged: (val) {
                               setState(() {
-                                firstName = val;
-                              });
-                            },
-                          ),
-                          SizedBox(height: 15.0),
-                          TextFormField(
-                            decoration: ktextInputDecoration.copyWith(
-                                labelText: 'Last Name'),
-                            onChanged: (val) {
-                              setState(() {
-                                lastName = val;
-                              });
-                            },
-                          ),                          SizedBox(height: 15.0),
-
-                          TextFormField(
-                            decoration: ktextInputDecoration.copyWith(
-                                labelText: 'Username'),
-                            onChanged: (val) {
-                              setState(() {
-                                username = val;
+                                fullName = val;
                               });
                             },
                           ),
