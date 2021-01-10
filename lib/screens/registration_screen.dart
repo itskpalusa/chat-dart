@@ -1,102 +1,195 @@
-import 'package:flash_chat/components/rounded_button.dart';
-import 'package:flash_chat/constants.dart';
-import 'package:flash_chat/screens/chat_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:chat/helper/helper_functions.dart';
+import 'package:chat/screens/home_screen.dart';
+import 'package:chat/services/auth_services.dart';
+import 'package:chat/constants.dart';
+import 'package:chat/loading.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  static const String id = 'registration_screen';
+  final Function toggleView;
+
+  RegistrationScreen({this.toggleView});
 
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final _auth = FirebaseAuth.instance;
-  bool showSpinner = false;
-  String name;
-  String email;
-  String password;
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  // text field state
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String password = '';
+  String username = '';
+  String error = '';
+
+  _onRegister() async {
+    if (_formKey.currentState.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      await _auth
+          .registerWithEmailAndPassword(
+              firstName, lastName, username, email, password)
+          .then((result) async {
+        if (result != null) {
+          await HelperFunctions.saveUserLoggedInSharedPreference(true);
+          await HelperFunctions.saveUserEmailSharedPreference(email);
+          await HelperFunctions.saveUserNameSharedPreference(firstName);
+
+          print("Registered");
+          await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
+            print("Logged in: $value");
+          });
+          await HelperFunctions.getUserEmailSharedPreference().then((value) {
+            print("Email: $value");
+          });
+          await HelperFunctions.getUserNameSharedPreference().then((value) {
+            print("Full Name: $value");
+          });
+
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomeScreen()));
+        } else {
+          setState(() {
+            error = 'Error while registering the user!';
+            _isLoading = false;
+          });
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                  keyboardType: TextInputType.name,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                    name = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: "Enter your name")),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                    email = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: "Enter your email")),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                    password = value;
-                  },
-                  decoration: kTextFieldDecoration.copyWith(
-                      hintText: "Enter your password")),
-              SizedBox(
-                height: 24.0,
-              ),
-              RoundedButton(
-                title: "Register",
-                color: Colors.blueAccent,
-                onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
-                  try {
-                    final newUser = (await _auth.createUserWithEmailAndPassword(
-                            email: email, password: password))
-                        .user;
+    return _isLoading
+        ? Loading()
+        : Scaffold(
+            body: Form(
+                key: _formKey,
+                child: Container(
+                  child: ListView(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 80.0),
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text("DashChat",
+                              style: TextStyle(
+                                  fontSize: 40.0, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 30.0),
+                          Text("Register", style: TextStyle(fontSize: 25.0)),
+                          SizedBox(height: 20.0),
+                          TextFormField(
+                            decoration: ktextInputDecoration.copyWith(
+                                labelText: 'First Name'),
+                            onChanged: (val) {
+                              setState(() {
+                                firstName = val;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 15.0),
+                          TextFormField(
+                            decoration: ktextInputDecoration.copyWith(
+                                labelText: 'Last Name'),
+                            onChanged: (val) {
+                              setState(() {
+                                lastName = val;
+                              });
+                            },
+                          ),                          SizedBox(height: 15.0),
 
-                    if (newUser != null) {
-                      Navigator.pushNamed(context, ChatScreen.id);
-                    }
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                          TextFormField(
+                            decoration: ktextInputDecoration.copyWith(
+                                labelText: 'Username'),
+                            onChanged: (val) {
+                              setState(() {
+                                username = val;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 15.0),
+                          TextFormField(
+                            decoration: ktextInputDecoration.copyWith(
+                                labelText: 'Email'),
+                            validator: (val) {
+                              return RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(val)
+                                  ? null
+                                  : "Please enter a valid email";
+                            },
+                            onChanged: (val) {
+                              setState(() {
+                                email = val;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 15.0),
+                          TextFormField(
+                            decoration: ktextInputDecoration.copyWith(
+                                labelText: 'Password'),
+                            validator: (val) => val.length < 6
+                                ? 'Password not strong enough'
+                                : null,
+                            obscureText: true,
+                            onChanged: (val) {
+                              setState(() {
+                                password = val;
+                              });
+                            },
+                          ),
+                          SizedBox(height: 20.0),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50.0,
+                            child: RaisedButton(
+                                elevation: 0.0,
+                                color: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0)),
+                                child: Text('Register',
+                                    style: TextStyle(fontSize: 16.0)),
+                                onPressed: () {
+                                  _onRegister();
+                                }),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text.rich(
+                            TextSpan(
+                              text: "Already have an account? ",
+                              style: TextStyle(fontSize: 14.0),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Sign In',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      widget.toggleView();
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(error,
+                              style:
+                                  TextStyle(color: Colors.red, fontSize: 14.0)),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          );
   }
 }
