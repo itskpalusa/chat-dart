@@ -1,8 +1,8 @@
+import 'package:chat/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/authentication_screen.dart';
-import 'package:chat/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,9 +41,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      //home: _isLoggedIn != null ? _isLoggedIn ? HomePage() : AuthenticatePage() : Center(child: CircularProgressIndicator()),
-      home: _isLoggedIn ? HomeScreen() : AuthenticatePage(),
-      //home: HomePage(),
+      home: _isLoggedIn != null
+          ? _isLoggedIn
+              ? Home()
+              : AuthenticatePage()
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }
