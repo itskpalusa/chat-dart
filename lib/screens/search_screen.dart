@@ -45,7 +45,6 @@ class _SearchScreenState extends State<SearchScreen> {
           .searchByName(searchEditingController.text)
           .then((snapshot) {
         searchResultSnapshot = snapshot;
-        //print("$searchResultSnapshot");
         setState(() {
           isLoading = false;
           hasUserSearched = true;
@@ -153,62 +152,63 @@ class _SearchScreenState extends State<SearchScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.black87,
         title: Text('Search',
             style: TextStyle(
                 fontSize: 27.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.white)),
       ),
-      body: // isLoading ? Container(
-          //   child: Center(
-          //     child: CircularProgressIndicator(),
-          //   ),
-          // )
-          // :
-          Container(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-              color: Colors.grey[700],
-              child: Row(
+      body: isLoading
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Container(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchEditingController,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                          hintText: "Search groups...",
-                          hintStyle: TextStyle(
-                            color: Colors.white38,
-                            fontSize: 16,
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    color: Colors.grey[500],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchEditingController,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                                hintText: "Search groups...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white38,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
                           ),
-                          border: InputBorder.none),
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _initiateSearch();
+                            },
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(40)),
+                                child: Icon(Icons.search, color: Colors.white)))
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        _initiateSearch();
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Icon(Icons.search, color: Colors.white)))
+                  isLoading
+                      ? Container(
+                          child: Center(child: CircularProgressIndicator()))
+                      : groupList()
                 ],
               ),
             ),
-            isLoading
-                ? Container(child: Center(child: CircularProgressIndicator()))
-                : groupList()
-          ],
-        ),
-      ),
     );
   }
 }
