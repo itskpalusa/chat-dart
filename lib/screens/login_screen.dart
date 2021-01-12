@@ -1,13 +1,16 @@
+import 'package:apple_sign_in/apple_sign_in_button.dart' as asib;
+import 'package:apple_sign_in/scope.dart';
 import 'package:chat/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
-import 'package:chat/screens/home_screen.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/loading.dart';
+import 'package:provider/provider.dart';
+import 'apple_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
@@ -56,8 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
             print("Full Name: $value");
           });
 
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Home()));
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
         } else {
           setState(() {
             error = 'Error signing in!';
@@ -70,6 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appleSignInAvailable =
+        Provider.of<AppleSignInAvailable>(context, listen: false);
+
     return _isLoading
         ? Loading()
         : Scaffold(
@@ -127,13 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             elevation: 0.0,
                             color: Colors.blue,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
+                                borderRadius: BorderRadius.circular(5.0)),
                             child: Text('Sign In',
                                 style: TextStyle(fontSize: 16.0)),
                             onPressed: () {
                               _onSignIn();
                             }),
                       ),
+                      SizedBox(height: 20.0),
+                      if (appleSignInAvailable.isAvailable)
+                        asib.AppleSignInButton(
+                          style: asib.ButtonStyle.black,
+                          type: asib.ButtonType.signIn,
+                          onPressed: () => _signInWithApple(context),
+                        ),
                       SizedBox(height: 10.0),
                       Text.rich(
                         TextSpan(
@@ -161,5 +174,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ));
+  }
+}
+
+Future<void> _signInWithApple(BuildContext context) async {
+  try {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final user = await authService
+        .signInWithApple(scopes: [Scope.email, Scope.fullName]);
+    print('uid: ${user.uid}');
+  } catch (e) {
+    // TODO: Show alert here
+    print(e);
   }
 }
