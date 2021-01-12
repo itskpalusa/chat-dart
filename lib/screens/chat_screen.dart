@@ -1,5 +1,6 @@
 import 'package:chat/screens/chat_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
@@ -18,6 +19,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
+  User _user = FirebaseAuth.instance.currentUser;
 
   Widget _chatMessages() {
     return StreamBuilder(
@@ -30,8 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   return MessageTile(
                     message: snapshot.data.documents[index].data()["message"],
                     sender: snapshot.data.documents[index].data()["sender"],
-                    sentByMe: widget.userName ==
-                        snapshot.data.documents[index].data()["sender"],
+                    sentByMe: _user.uid ==
+                        snapshot.data.documents[index].data()["senderId"],
                   );
                 })
             : Container();
@@ -44,7 +46,9 @@ class _ChatScreenState extends State<ChatScreen> {
       Map<String, dynamic> chatMessageMap = {
         "message": messageEditingController.text,
         "sender": widget.userName,
+        'senderId': _user.uid,
         'time': DateTime.now().millisecondsSinceEpoch,
+        'timestamp': Timestamp.now()
       };
 
       DBService().sendMessage(widget.groupId, chatMessageMap);
@@ -58,6 +62,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    print(_user.uid);
+
     DBService().getChats(widget.groupId).then((val) {
       // print(val);
       setState(() {
