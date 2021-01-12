@@ -32,22 +32,23 @@ class _HomeScreenState extends State<HomeScreen> {
   // widgets
   Widget noGroupWidget() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-                onTap: () {
-                  _popupDialog(context);
-                },
-                child: Icon(Icons.add_circle,
-                    color: Colors.grey[700], size: 75.0)),
-            SizedBox(height: 20.0),
-            Text(
-                "You've not joined any group, tap on the 'add' icon to create a group or search for groups by tapping on the search button below."),
-          ],
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 25.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+              onTap: () {
+                _popupDialog(context);
+              },
+              child:
+                  Icon(Icons.add_circle, color: Colors.grey[700], size: 75.0)),
+          SizedBox(height: 20.0),
+          Text(
+              "You've not joined any group, tap on the 'add' icon to create a group or search for groups by tapping on the search button below."),
+        ],
+      ),
+    );
   }
 
   Widget groupsList() {
@@ -86,31 +87,35 @@ class _HomeScreenState extends State<HomeScreen> {
   // functions
   _getUserAuthAndJoinedGroups() async {
     _user = await FirebaseAuth.instance.currentUser;
-    await HelperFunctions.getUserNameSharedPreference().then((value) {
-      setState(() {
-        _userName = value;
-      });
-    });
-    DBService(uid: _user.uid).getUserGroups().then((snapshots) {
-      // print(snapshots);
-      setState(() {
-        _groups = snapshots;
-      });
-    });
-    await HelperFunctions.getUserEmailSharedPreference().then((value) {
-      setState(() {
-        _email = value;
-      });
-    });
+    await HelperFunctions.getUserNameSharedPreference().then(
+      (value) {
+        setState(() {
+          _userName = value;
+        });
+      },
+    );
+    DBService(uid: _user.uid).getUserGroups().then(
+      (snapshots) {
+        // print(snapshots);
+        setState(() {
+          _groups = snapshots;
+        });
+      },
+    );
+    await HelperFunctions.getUserEmailSharedPreference().then(
+      (value) {
+        setState(() {
+          _email = value;
+        });
+      },
+    );
   }
 
   String _destructureId(String res) {
-    // print(res.substring(0, res.indexOf('_')));
     return res.substring(0, res.indexOf('_'));
   }
 
   String _destructureName(String res) {
-    // print(res.substring(res.indexOf('_') + 1));
     return res.substring(res.indexOf('_') + 1);
   }
 

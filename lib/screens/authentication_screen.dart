@@ -22,8 +22,9 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
   Widget build(BuildContext context) {
     if (_showSignIn) {
       return Provider<AuthService>(
-          create: (_) => AuthService(),
-          child: LoginScreen(toggleView: _toggleView));
+        create: (_) => AuthService(),
+        child: LoginScreen(toggleView: _toggleView),
+      );
     } else {
       return RegistrationScreen(toggleView: _toggleView);
     }

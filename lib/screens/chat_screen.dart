@@ -35,7 +35,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     sentByMe: _user.uid ==
                         snapshot.data.documents[index].data()["senderId"],
                   );
-                })
+                },
+              )
             : Container();
       },
     );
@@ -65,7 +66,6 @@ class _ChatScreenState extends State<ChatScreen> {
     print(_user.uid);
 
     DBService().getChats(widget.groupId).then((val) {
-      // print(val);
       setState(() {
         _chats = val;
       });
@@ -86,9 +86,12 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             onPressed: () {
               // do something
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).push(
+                MaterialPageRoute(
                   builder: (context) => ChatSettings(
-                      groupId: widget.groupId, groupName: widget.groupName)));
+                      groupId: widget.groupId, groupName: widget.groupName),
+                ),
+              );
             },
           )
         ],

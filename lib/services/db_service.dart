@@ -5,22 +5,24 @@ class DBService {
 
   DBService({this.uid});
 
-  // Collection reference
+  // Collection References
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection('groups');
 
-  // update userdata
+  // Update UserData
   Future updateUserData(String fullName, String email) async {
     return await userCollection.doc(uid).set({
       'fullName': fullName,
       'email': email,
       'groups': [],
-      'profilePic': ''
+      'profilePic': '',
+      'lastLogin': Timestamp.now()
     });
   }
 
+  // Get Group Name
   Future<String> getGroupName(String groupKey) async {
     DocumentReference groupDocRef = groupCollection.doc(groupKey);
     String groupName;
@@ -30,7 +32,7 @@ class DBService {
     return groupName;
   }
 
-  // Add user to group
+  // Add User To Group || Add Group to User's Document
   Future addToGroup(String groupKey, String userName, String userID) async {
     DocumentReference groupDocRef = groupCollection.doc(groupKey);
     DocumentReference userDocRef = userCollection.doc(userID);
@@ -46,7 +48,7 @@ class DBService {
     });
   }
 
-  // create group
+  // Create Group
   Future createGroup(String userName, String groupName) async {
     DocumentReference groupDocRef = await groupCollection.add({
       'groupName': groupName,
@@ -70,7 +72,7 @@ class DBService {
     });
   }
 
-  // toggling the user group join
+  // Toggle Group Join
   Future togglingGroupJoin(
       String groupId, String groupName, String userName) async {
     DocumentReference userDocRef = userCollection.doc(uid);
@@ -101,7 +103,7 @@ class DBService {
     }
   }
 
-  // has user joined the group
+  // Check if User has Joined Group
   Future<bool> isUserJoined(
       String groupId, String groupName, String userName) async {
     DocumentReference userDocRef = userCollection.doc(uid);
@@ -118,7 +120,7 @@ class DBService {
     }
   }
 
-  // get user data
+  // Get User Data
   Future getUserData(String email) async {
     QuerySnapshot snapshot =
         await userCollection.where('email', isEqualTo: email).get();
@@ -126,13 +128,12 @@ class DBService {
     return snapshot;
   }
 
-  // get user groups
+  // Get User Groups
   getUserGroups() async {
-    // return await Firestore.instance.collection("users").where('email', isEqualTo: email).snapshots();
     return FirebaseFirestore.instance.collection("users").doc(uid).snapshots();
   }
 
-  // send message
+  // Send a Message
   sendMessage(String groupId, chatMessageData) {
     FirebaseFirestore.instance
         .collection('groups')
@@ -146,7 +147,7 @@ class DBService {
     });
   }
 
-  // get chats of a particular group
+  // get Group Conversation
   getChats(String groupId) async {
     return FirebaseFirestore.instance
         .collection('groups')
@@ -156,11 +157,20 @@ class DBService {
         .snapshots();
   }
 
-  // search groups
+  // Search Groups by Name (GLOBAL)
   searchByName(String groupName) {
     return FirebaseFirestore.instance
         .collection("groups")
         .where('groupName', isEqualTo: groupName)
         .get();
   }
+
+  // Search Groups by Name
+  searchByNamePrivate(String groupName) {
+    return FirebaseFirestore.instance
+        .collection("groups")
+        .where('groupName', isEqualTo: groupName).where('users', arrayContains: uid)
+        .get();
+  }
+  
 }

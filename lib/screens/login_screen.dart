@@ -80,100 +80,103 @@ class _LoginScreenState extends State<LoginScreen> {
         ? Loading()
         : Scaffold(
             body: Form(
-            key: _formKey,
-            child: Container(
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 80.0),
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Chat",
-                          style: TextStyle(
-                              fontSize: 40.0, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 30.0),
-                      Text("Sign In", style: TextStyle(fontSize: 25.0)),
-                      SizedBox(height: 20.0),
-                      TextFormField(
-                        decoration:
-                            ktextInputDecoration.copyWith(labelText: 'Email'),
-                        validator: (val) {
-                          return RegExp(
-                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                  .hasMatch(val)
-                              ? null
-                              : "Please enter a valid email";
-                        },
-                        onChanged: (val) {
-                          setState(() {
-                            email = val;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 15.0),
-                      TextFormField(
-                        decoration: ktextInputDecoration.copyWith(
-                            labelText: 'Password'),
-                        validator: (val) => val.length < 6
-                            ? 'Password not strong enough'
-                            : null,
-                        obscureText: true,
-                        onChanged: (val) {
-                          setState(() {
-                            password = val;
-                          });
-                        },
-                      ),
-                      SizedBox(height: 20.0),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50.0,
-                        child: RaisedButton(
-                            elevation: 0.0,
-                            color: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            child: Text('Sign In',
-                                style: TextStyle(fontSize: 16.0)),
-                            onPressed: () {
-                              _onSignIn();
-                            }),
-                      ),
-                      SizedBox(height: 20.0),
-                      if (appleSignInAvailable.isAvailable)
-                        asib.AppleSignInButton(
-                          style: asib.ButtonStyle.black,
-                          type: asib.ButtonType.signIn,
-                          onPressed: () => _signInWithApple(context),
+              key: _formKey,
+              child: Container(
+                child: ListView(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 30.0, vertical: 80.0),
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Chat",
+                            style: TextStyle(
+                                fontSize: 40.0, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 30.0),
+                        Text("Sign In", style: TextStyle(fontSize: 25.0)),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          decoration:
+                              ktextInputDecoration.copyWith(labelText: 'Email'),
+                          validator: (val) {
+                            return RegExp(
+                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(val)
+                                ? null
+                                : "Please enter a valid email";
+                          },
+                          onChanged: (val) {
+                            setState(() {
+                              email = val;
+                            });
+                          },
                         ),
-                      SizedBox(height: 10.0),
-                      Text.rich(
-                        TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(fontSize: 14.0),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Register here',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  widget.toggleView();
-                                },
-                            ),
-                          ],
+                        SizedBox(height: 15.0),
+                        TextFormField(
+                          decoration: ktextInputDecoration.copyWith(
+                              labelText: 'Password'),
+                          validator: (val) => val.length < 6
+                              ? 'Password not strong enough'
+                              : null,
+                          obscureText: true,
+                          onChanged: (val) {
+                            setState(() {
+                              password = val;
+                            });
+                          },
                         ),
-                      ),
-                      SizedBox(height: 10.0),
-                      Text(error,
-                          style: TextStyle(color: Colors.red, fontSize: 14.0)),
-                    ],
-                  ),
-                ],
+                        SizedBox(height: 20.0),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50.0,
+                          child: RaisedButton(
+                              elevation: 0.0,
+                              color: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0)),
+                              child: Text('Sign In',
+                                  style: TextStyle(fontSize: 16.0)),
+                              onPressed: () {
+                                _onSignIn();
+                              }),
+                        ),
+                        SizedBox(height: 20.0),
+                        if (appleSignInAvailable.isAvailable)
+                          asib.AppleSignInButton(
+                            style: asib.ButtonStyle.black,
+                            type: asib.ButtonType.signIn,
+                            onPressed: () => _signInWithApple(context),
+                          ),
+                        SizedBox(height: 10.0),
+                        Text.rich(
+                          TextSpan(
+                            text: "Don't have an account? ",
+                            style: TextStyle(fontSize: 14.0),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Register here',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    widget.toggleView();
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        Text(error,
+                            style:
+                                TextStyle(color: Colors.red, fontSize: 14.0)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ));
+          );
   }
 }
 
