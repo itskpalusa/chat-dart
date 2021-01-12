@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final AuthService _auth = AuthService();
   User _user;
   String _groupName;
+  String _groupKey;
   String _userName = '';
   String _email = '';
   Stream _groups;
@@ -154,6 +155,48 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Join Group Popup
+  void _JoinPopupDialog(BuildContext context) {
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget joinButton = FlatButton(
+      child: Text("Join"),
+      onPressed: () async {
+        if (_groupKey != null) {
+          await HelperFunctions.getUserNameSharedPreference().then((val) {
+            DBService(uid: _user.uid)
+                .addToGroup(_groupKey, _userName, _user.uid);
+          });
+          Navigator.of(context).pop();
+        }
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Join a group"),
+      content: TextField(
+          onChanged: (val) {
+            _groupKey = val;
+          },
+          style: TextStyle(fontSize: 15.0, height: 2.0, color: Colors.black)),
+      actions: [
+        cancelButton,
+        joinButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   // Building the HomePage widget
   @override
   Widget build(BuildContext context) {
@@ -169,6 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => SearchScreen()));
+              }),
+          IconButton(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              icon: Icon(Icons.add, size: 25.0),
+              onPressed: () {
+                _JoinPopupDialog(context);
               })
         ],
       ),
