@@ -1,9 +1,8 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
-import 'package:chat/screens/authentication_screen.dart';
-import 'package:chat/screens/profile_screen.dart';
-import 'package:chat/screens/search_screen.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/group_tile.dart';
@@ -133,20 +132,35 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
     );
-
-    AlertDialog alert = AlertDialog(
-      title: Text("Create a group"),
-      content: TextField(
-          onChanged: (val) {
-            _groupName = val;
-          },
-          style: TextStyle(fontSize: 15.0, height: 2.0, color: Colors.black)),
-      actions: [
-        cancelButton,
-        createButton,
-      ],
-    );
-
+    dynamic alert;
+    if (!Platform.isIOS) {
+      AlertDialog alert = AlertDialog(
+        title: Text("Create a group"),
+        content: TextField(
+            onChanged: (val) {
+              _groupName = val;
+            },
+            style: TextStyle(fontSize: 15.0, height: 2.0)),
+        actions: [
+          cancelButton,
+          createButton,
+        ],
+      );
+    }
+    {
+      alert = CupertinoAlertDialog(
+        title: Text("Create a group"),
+        content: CupertinoTextField(
+            onChanged: (val) {
+              _groupKey = val;
+            },
+            style: TextStyle(fontSize: 15.0, height: 2.0)),
+        actions: [
+          cancelButton,
+          createButton,
+        ],
+      );
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -156,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Join Group Popup
-  void _JoinPopupDialog(BuildContext context) {
+  void _joinPopupDialog(BuildContext context) {
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -176,18 +190,37 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
-    AlertDialog alert = AlertDialog(
-      title: Text("Join a group"),
-      content: TextField(
-          onChanged: (val) {
-            _groupKey = val;
-          },
-          style: TextStyle(fontSize: 15.0, height: 2.0, color: Colors.black)),
-      actions: [
-        cancelButton,
-        joinButton,
-      ],
-    );
+    dynamic alert;
+    if (!Platform.isIOS) {
+      alert = AlertDialog(
+        title: Text("Join a group"),
+        content: TextField(
+            onChanged: (val) {
+              _groupKey = val;
+            },
+            style: TextStyle(
+              fontSize: 15.0,
+              height: 2.0,
+            )),
+        actions: [
+          cancelButton,
+          joinButton,
+        ],
+      );
+    } else {
+      alert = CupertinoAlertDialog(
+        title: Text("Join a group"),
+        content: CupertinoTextField(
+            onChanged: (val) {
+              _groupKey = val;
+            },
+            style: TextStyle(fontSize: 15.0, height: 2.0)),
+        actions: [
+          cancelButton,
+          joinButton,
+        ],
+      );
+    }
 
     showDialog(
       context: context,
@@ -207,73 +240,22 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              icon: Icon(Icons.search, size: 25.0),
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SearchScreen()));
-              }),
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            icon: Icon(Icons.create, size: 25.0),
+            onPressed: () {
+              _popupDialog(context);
+            },
+          ),
           IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              icon: Icon(Icons.add, size: 25.0),
-              onPressed: () {
-                _JoinPopupDialog(context);
-              })
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            icon: Icon(Icons.add, size: 25.0),
+            onPressed: () {
+              _joinPopupDialog(context);
+            },
+          )
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.symmetric(vertical: 50.0),
-          children: <Widget>[
-            Icon(Icons.account_circle, size: 150.0, color: Colors.grey[700]),
-            SizedBox(height: 15.0),
-            Text(_userName,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 7.0),
-            ListTile(
-              onTap: () {},
-              selected: true,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-              leading: Icon(Icons.group),
-              title: Text('Groups'),
-            ),
-            ListTile(
-              onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) =>
-                        ProfileScreen(userName: _userName, email: _email)));
-              },
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-            ),
-            ListTile(
-              onTap: () async {
-                await _auth.signOut();
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => AuthenticatePage()),
-                    (Route<dynamic> route) => false);
-              },
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-              leading: Icon(Icons.exit_to_app, color: Colors.red),
-              title: Text('Log Out', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        ),
-      ),
       body: groupsList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _popupDialog(context);
-        },
-        child: Icon(Icons.add, color: Colors.white, size: 30.0),
-        backgroundColor: Colors.grey[700],
-        elevation: 0.0,
-      ),
     );
   }
 }
