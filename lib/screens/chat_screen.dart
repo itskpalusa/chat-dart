@@ -1,3 +1,4 @@
+import 'package:chat/screens/chat_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
@@ -27,10 +28,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   return MessageTile(
-                    message: snapshot.data.documents[index].data["message"],
-                    sender: snapshot.data.documents[index].data["sender"],
+                    message: snapshot.data.documents[index].data()["message"],
+                    sender: snapshot.data.documents[index].data()["sender"],
                     sentByMe: widget.userName ==
-                        snapshot.data.documents[index].data["sender"],
+                        snapshot.data.documents[index].data()["sender"],
                   );
                 })
             : Container();
@@ -72,6 +73,19 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text(widget.groupName),
         centerTitle: true,
         elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+            ),
+            onPressed: () {
+              // do something
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ChatSettings(
+                      groupId: widget.groupId, groupName: widget.groupName)));
+            },
+          )
+        ],
       ),
       body: Container(
         child: Stack(
