@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     dynamic alert;
     if (!Platform.isIOS) {
-      AlertDialog alert = AlertDialog(
+      alert = AlertDialog(
         title: Text("Create a group"),
         content: TextField(
             onChanged: (val) {

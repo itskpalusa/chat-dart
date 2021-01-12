@@ -16,7 +16,7 @@ class DBService {
     return await userCollection.doc(uid).set({
       'fullName': fullName,
       'email': email,
-      'password': password,
+//      'password': password,
       'groups': [],
       'profilePic': ''
     });

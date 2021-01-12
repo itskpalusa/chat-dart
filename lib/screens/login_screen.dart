@@ -1,3 +1,4 @@
+import 'package:chat/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
           });
 
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeScreen()));
+              MaterialPageRoute(builder: (context) => Home()));
         } else {
           setState(() {
             error = 'Error signing in!';

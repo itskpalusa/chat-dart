@@ -1,10 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
-import 'package:chat/screens/home_screen.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/loading.dart';
+
+import 'home.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final Function toggleView;
@@ -52,7 +53,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           });
 
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeScreen()));
+              MaterialPageRoute(builder: (context) => Home()));
         } else {
           setState(() {
             error = 'Error while registering the user!';
