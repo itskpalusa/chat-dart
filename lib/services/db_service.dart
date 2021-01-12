@@ -9,7 +9,7 @@ class DBService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   final CollectionReference groupCollection =
-  FirebaseFirestore.instance.collection('groups');
+      FirebaseFirestore.instance.collection('groups');
 
   // update userdata
   Future updateUserData(String fullName, String email, String password) async {
@@ -19,6 +19,31 @@ class DBService {
       'password': password,
       'groups': [],
       'profilePic': ''
+    });
+  }
+
+  Future<String> getGroupName(String groupKey) async {
+    DocumentReference groupDocRef = groupCollection.doc(groupKey);
+    String groupName;
+    await groupDocRef.get().then((snapshot) {
+      groupName = snapshot.data()['groupName'];
+    });
+    return groupName;
+  }
+
+  // Add user to group
+  Future addToGroup(String groupKey, String userName, String userID) async {
+    DocumentReference groupDocRef = groupCollection.doc(groupKey);
+    DocumentReference userDocRef = userCollection.doc(userID);
+
+    var groupName = await getGroupName(groupKey);
+    var space = "_";
+
+    await userDocRef.update({
+      'groups': FieldValue.arrayUnion(['$groupKey$space$groupName'])
+    });
+    await groupDocRef.update({
+      'members': FieldValue.arrayUnion(['$userID$space$userName']),
     });
   }
 
@@ -42,8 +67,7 @@ class DBService {
 
     DocumentReference userDocRef = userCollection.doc(uid);
     return await userDocRef.update({
-      'groups':
-          FieldValue.arrayUnion([groupDocRef.id + '_' + groupName])
+      'groups': FieldValue.arrayUnion([groupDocRef.id + '_' + groupName])
     });
   }
 
@@ -58,7 +82,7 @@ class DBService {
     List<dynamic> groups = await userDocSnapshot.data()['groups'];
 
     if (groups.contains(groupId + '_' + groupName)) {
-      //print('hey');
+      print('hey');
       await userDocRef.update({
         'groups': FieldValue.arrayRemove([groupId + '_' + groupName])
       });
@@ -67,7 +91,7 @@ class DBService {
         'members': FieldValue.arrayRemove([uid + '_' + userName])
       });
     } else {
-      //print('nay');
+      print('nay');
       await userDocRef.update({
         'groups': FieldValue.arrayUnion([groupId + '_' + groupName])
       });
