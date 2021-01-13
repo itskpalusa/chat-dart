@@ -179,8 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           createButton,
         ],
       );
-    }
-    {
+    } else {
       alert = CupertinoAlertDialog(
         title: Text("Create a group"),
         content: CupertinoTextField(
