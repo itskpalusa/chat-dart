@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
             }
           });
     } else {
-      Scaffold(
+      return Scaffold(
         body: _children[_currentIndex], // new
         bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped, // new

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _getUserAuthAndJoinedGroups();
+    final fbm = FirebaseMessaging();
+    fbm.requestNotificationPermissions();
   }
 
   // widgets
