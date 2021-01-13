@@ -152,7 +152,7 @@ class _SearchScreenState extends State<SearchScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
-        title: Text('Search',
+        title: Text('Search Groups',
             style: TextStyle(
                 fontSize: 27.0,
                 fontWeight: FontWeight.bold,
@@ -170,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                    color: Colors.grey[500],
+                    color: Colors.grey[700],
                     child: Row(
                       children: [
                         Expanded(
