@@ -44,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
                   Text(email, style: TextStyle(fontSize: 17.0)),
                 ],
               ),
-              Spacer(),
+              SizedBox(height: 15.0),
               GestureDetector(
                 onTap: () async {
                   await _auth.signOut();

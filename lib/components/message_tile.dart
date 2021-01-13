@@ -38,16 +38,16 @@ class MessageTile extends StatelessWidget {
                 : Text(sender,
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                        color: sentByMe ? Colors.white : Colors.black,
+                        color: Colors.white,
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.5)),
             SizedBox(height: 7.0),
-            Text(message,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 15.0,
-                    color: sentByMe ? Colors.white : Colors.black)),
+            Text(
+              message,
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 15.0, color: Colors.white),
+            ),
           ],
         ),
       ),
