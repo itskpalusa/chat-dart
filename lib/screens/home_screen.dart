@@ -120,23 +120,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _popupDialog(BuildContext context) {
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget createButton = FlatButton(
-      child: Text("Create"),
-      onPressed: () async {
-        if (_groupName != null) {
-          await HelperFunctions.getUserNameSharedPreference().then((val) {
-            DBService(uid: _user.uid).createGroup(val, _groupName);
-          });
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+
+    Widget cancelButton;
+    Widget createButton;
+    if (!Platform.isIOS) {
+      cancelButton = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () {
           Navigator.of(context).pop();
-        }
-      },
-    );
+        },
+      );
+      createButton = FlatButton(
+        child: Text("Create"),
+        onPressed: () async {
+          if (_groupName != null) {
+            await HelperFunctions.getUserNameSharedPreference().then((val) {
+              DBService(uid: _user.uid).createGroup(val, _groupName);
+            });
+            Navigator.of(context).pop();
+          }
+        },
+      );
+    } else {
+      cancelButton = CupertinoDialogAction(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+      createButton = CupertinoDialogAction(
+        child: Text("Create"),
+        onPressed: () async {
+          if (_groupName != null) {
+            await HelperFunctions.getUserNameSharedPreference().then((val) {
+              DBService(uid: _user.uid).createGroup(val, _groupName);
+            });
+            Navigator.of(context).pop();
+          }
+        },
+      );
+    }
     dynamic alert;
     if (!Platform.isIOS) {
       alert = AlertDialog(
@@ -156,10 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
       alert = CupertinoAlertDialog(
         title: Text("Create a group"),
         content: CupertinoTextField(
-            onChanged: (val) {
-              _groupKey = val;
-            },
-            style: TextStyle(fontSize: 15.0, height: 2.0)),
+          onChanged: (val) {
+            _groupKey = val;
+          },
+          style: TextStyle(
+              fontSize: 15.0,
+              height: 2.0,
+              color: darkModeOn ? Colors.white : Colors.black),
+        ),
         actions: [
           cancelButton,
           createButton,
@@ -176,25 +205,51 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Join Group Popup
   void _joinPopupDialog(BuildContext context) {
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    );
-    Widget joinButton = FlatButton(
-      child: Text("Join"),
-      onPressed: () async {
-        if (_groupKey != null) {
-          await HelperFunctions.getUserNameSharedPreference().then((val) {
-            DBService(uid: _user.uid)
-                .addToGroup(_groupKey, _userName, _user.uid);
-          });
-          Navigator.of(context).pop();
-        }
-      },
-    );
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
 
+    Widget cancelButton;
+    Widget joinButton;
+    if (!Platform.isIOS) {
+      cancelButton = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+      joinButton = FlatButton(
+        child: Text("Join"),
+        onPressed: () async {
+          if (_groupKey != null) {
+            await HelperFunctions.getUserNameSharedPreference().then((val) {
+              DBService(uid: _user.uid)
+                  .addToGroup(_groupKey, _userName, _user.uid);
+            });
+            Navigator.of(context).pop();
+          }
+        },
+      );
+    } else {
+      cancelButton = CupertinoDialogAction(
+        child: Text("Cancel"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      );
+
+      joinButton = CupertinoDialogAction(
+        child: Text("Join"),
+        onPressed: () async {
+          if (_groupKey != null) {
+            await HelperFunctions.getUserNameSharedPreference().then((val) {
+              DBService(uid: _user.uid)
+                  .addToGroup(_groupKey, _userName, _user.uid);
+            });
+            Navigator.of(context).pop();
+          }
+        },
+      );
+    }
     dynamic alert;
     if (!Platform.isIOS) {
       alert = AlertDialog(
@@ -216,10 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
       alert = CupertinoAlertDialog(
         title: Text("Join a group"),
         content: CupertinoTextField(
+            autofocus: true,
             onChanged: (val) {
               _groupKey = val;
             },
-            style: TextStyle(fontSize: 15.0, height: 2.0)),
+            style: TextStyle(
+                fontSize: 15.0,
+                height: 2.0,
+                color: darkModeOn ? Colors.white : Colors.black)),
         actions: [
           cancelButton,
           joinButton,
