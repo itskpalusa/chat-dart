@@ -52,8 +52,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             print("Full Name: $value");
           });
 
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Home()));
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
         } else {
           setState(() {
             error = 'Error while registering the user!';
@@ -80,7 +80,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text("Create or Join Groups",
+                          Text("Create an Account",
                               style: TextStyle(
                                   fontSize: 40.0, fontWeight: FontWeight.bold)),
                           SizedBox(height: 30.0),

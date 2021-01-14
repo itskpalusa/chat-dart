@@ -28,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // text field state
   String email = '';
+  String fullName = '';
+
   String password = '';
   String error = '';
 
@@ -144,10 +146,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 20.0),
                         if (appleSignInAvailable.isAvailable)
                           asib.AppleSignInButton(
-                            style: asib.ButtonStyle.black,
-                            type: asib.ButtonType.signIn,
-                            onPressed: () => _signInWithApple(context),
-                          ),
+                              style: asib.ButtonStyle.black,
+                              type: asib.ButtonType.signIn,
+                              onPressed: () => {
+                                    _signInWithApple(context),
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) => Home())),
+                                  }),
                         SizedBox(height: 10.0),
                         Text.rich(
                           TextSpan(
@@ -186,6 +192,7 @@ Future<void> _signInWithApple(BuildContext context) async {
     final user = await authService
         .signInWithApple(scopes: [Scope.email, Scope.fullName]);
     print('uid: ${user.uid}');
+    print('uid: ${user.email}');
   } catch (e) {
     // TODO: Show alert here
     print(e);
