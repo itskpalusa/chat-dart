@@ -155,13 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       createButton = CupertinoDialogAction(
         child: Text("Create"),
+        isDefaultAction: true,
         onPressed: () async {
-          if (_groupName != null) {
-            await HelperFunctions.getUserNameSharedPreference().then((val) {
-              DBService(uid: _user.uid).createGroup(val, _groupName);
-            });
-            Navigator.of(context).pop();
-          }
+          await HelperFunctions.getUserNameSharedPreference().then((val) {
+            DBService(uid: _user.uid).createGroup(val, _groupName);
+          });
+          Navigator.of(context).pop();
         },
       );
     }
@@ -184,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Create a group"),
         content: CupertinoTextField(
           onChanged: (val) {
-            _groupKey = val;
+            _groupName = val;
           },
           style: TextStyle(
               fontSize: 15.0,
@@ -197,97 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       );
     }
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  // Join Group Popup
-  void _joinPopupDialog(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool darkModeOn = brightness == Brightness.dark;
-
-    Widget cancelButton;
-    Widget joinButton;
-    if (!Platform.isIOS) {
-      cancelButton = FlatButton(
-        child: Text("Cancel"),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-      joinButton = FlatButton(
-        child: Text("Join"),
-        onPressed: () async {
-          if (_groupKey != null) {
-            await HelperFunctions.getUserNameSharedPreference().then((val) {
-              DBService(uid: _user.uid)
-                  .addToGroup(_groupKey, _userName, _user.uid);
-            });
-            Navigator.of(context).pop();
-          }
-        },
-      );
-    } else {
-      cancelButton = CupertinoDialogAction(
-        child: Text("Cancel"),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-
-      joinButton = CupertinoDialogAction(
-        child: Text("Join"),
-        onPressed: () async {
-          if (_groupKey != null) {
-            await HelperFunctions.getUserNameSharedPreference().then((val) {
-              DBService(uid: _user.uid)
-                  .addToGroup(_groupKey, _userName, _user.uid);
-            });
-            Navigator.of(context).pop();
-          }
-        },
-      );
-    }
-    dynamic alert;
-    if (!Platform.isIOS) {
-      alert = AlertDialog(
-        title: Text("Join a group"),
-        content: TextField(
-            onChanged: (val) {
-              _groupKey = val;
-            },
-            style: TextStyle(
-              fontSize: 15.0,
-              height: 2.0,
-            )),
-        actions: [
-          cancelButton,
-          joinButton,
-        ],
-      );
-    } else {
-      alert = CupertinoAlertDialog(
-        title: Text("Join a group"),
-        content: CupertinoTextField(
-            autofocus: true,
-            onChanged: (val) {
-              _groupKey = val;
-            },
-            style: TextStyle(
-                fontSize: 15.0,
-                height: 2.0,
-                color: darkModeOn ? Colors.white : Colors.black)),
-        actions: [
-          cancelButton,
-          joinButton,
-        ],
-      );
-    }
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -312,13 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _popupDialog(context);
             },
           ),
-          IconButton(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon: Icon(Icons.add, size: 25.0),
-            onPressed: () {
-              _joinPopupDialog(context);
-            },
-          )
         ],
       ),
       body: groupsList(),

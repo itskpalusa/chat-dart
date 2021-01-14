@@ -40,3 +40,4 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 ios/build/XCBuildData/
+ios/AuthKey_2VY9C5NY6X.p8

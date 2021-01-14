@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:chat/helper/helper_functions.dart';
+import 'package:chat/screens/push_screen.dart';
 import 'package:chat/screens/search_screen.dart';
 import 'package:chat/screens/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,6 +58,7 @@ class _HomeState extends State<Home> {
     final List<Widget> _children = [
       HomeScreen(),
       SearchScreen(),
+      PushScreen(),
       SettingsScreen(userName: _userName, email: _email),
     ];
     if (Platform.isIOS) {
@@ -77,6 +78,10 @@ class _HomeState extends State<Home> {
                 label: 'Search',
               ),
               new BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.bell),
+                label: 'bell',
+              ),
+              new BottomNavigationBarItem(
                   icon: Platform.isIOS
                       ? Icon(CupertinoIcons.settings)
                       : Icon(Icons.app_settings_alt_sharp),
@@ -92,6 +97,9 @@ class _HomeState extends State<Home> {
                 return SearchScreen();
                 break;
               case 2:
+                return PushScreen();
+                break;
+              case 3:
                 return SettingsScreen(userName: _userName, email: _email);
                 break;
               default:
@@ -103,16 +111,23 @@ class _HomeState extends State<Home> {
       return Scaffold(
         body: _children[_currentIndex], // new
         bottomNavigationBar: BottomNavigationBar(
-          onTap: onTabTapped, // new
+          backgroundColor: Colors.white, onTap: onTabTapped, // new
           currentIndex: _currentIndex, // new
           items: [
             new BottomNavigationBarItem(
               icon: Icon(Icons.home),
+              backgroundColor: Colors.black,
               label: 'Home',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Search',
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(
+                Icons.search,
+              ),
+              label: 'Bell',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.app_settings_alt_sharp),
