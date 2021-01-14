@@ -66,22 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
   }
-
-  void scrollToBottom() {
-    final bottomOffset = _scrollController.position.maxScrollExtent;
-    _scrollController.animateTo(
-      bottomOffset,
-      duration: Duration(milliseconds: 1000),
-      curve: Curves.easeInOut,
-    );
-  }
-
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
+  
 
   @override
   void initState() {
