@@ -18,7 +18,7 @@ class DBService {
       'email': email,
       'groups': [],
       'profilePic': '',
-      'lastLogin': Timestamp.now()
+      'timestamp': FieldValue.serverTimestamp(),
     });
   }
 
@@ -153,7 +153,7 @@ class DBService {
         .collection('groups')
         .doc(groupId)
         .collection('messages')
-        .orderBy('time')
+        .orderBy('timestamp', descending: true)
         .snapshots();
   }
 

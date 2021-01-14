@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
+import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   final String groupId;
@@ -20,23 +21,28 @@ class _ChatScreenState extends State<ChatScreen> {
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
   User _user = FirebaseAuth.instance.currentUser;
+  ScrollController _scrollController;
 
   Widget _chatMessages() {
     return StreamBuilder(
       stream: _chats,
       builder: (context, snapshot) {
         return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return MessageTile(
-                    message: snapshot.data.documents[index].data()["message"],
-                    sender: snapshot.data.documents[index].data()["sender"],
-                    sentByMe: _user.uid ==
-                        snapshot.data.documents[index].data()["senderId"],
-                  );
-                },
-              )
+            ? Padding(
+                padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
+                child: ListView.builder(  reverse: true,
+
+                  itemCount: snapshot.data.documents.length,
+                  controller: _scrollController,
+                  itemBuilder: (context, index) {
+                    return MessageTile(
+                      message: snapshot.data.documents[index].data()["message"],
+                      sender: snapshot.data.documents[index].data()["sender"],
+                      sentByMe: _user.uid ==
+                          snapshot.data.documents[index].data()["senderId"],
+                    );
+                  },
+                ))
             : Container();
       },
     );
@@ -56,15 +62,32 @@ class _ChatScreenState extends State<ChatScreen> {
 
       setState(() {
         messageEditingController.text = "";
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
     }
+  }
+
+  void scrollToBottom() {
+    final bottomOffset = _scrollController.position.maxScrollExtent;
+    _scrollController.animateTo(
+      bottomOffset,
+      duration: Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+    );
+  }
+
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
     print(_user.uid);
-
+    _scrollController = ScrollController();
     DBService().getChats(widget.groupId).then((val) {
       setState(() {
         _chats = val;
