@@ -80,7 +80,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text("Create an Account",
+                          Image(
+                            image: AssetImage('lib/images/logo_notext.png'),
+                            height: 100,
+                            width: 100,
+                          ),
+                          SizedBox(height: 20.0),
+                          Text("DashChat",
                               style: TextStyle(
                                   fontSize: 40.0, fontWeight: FontWeight.bold)),
                           SizedBox(height: 30.0),

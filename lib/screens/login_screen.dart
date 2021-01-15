@@ -92,7 +92,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text("Chat",
+                        Image(
+                          image: AssetImage('lib/images/logo_notext.png'),
+                          height: 100,
+                          width: 100,
+                        ),
+                        SizedBox(height: 20.0),
+
+                        Text("DashChat",
                             style: TextStyle(
                                 fontSize: 40.0, fontWeight: FontWeight.bold)),
                         SizedBox(height: 30.0),
@@ -143,17 +150,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _onSignIn();
                               }),
                         ),
-                        SizedBox(height: 20.0),
-                        if (appleSignInAvailable.isAvailable)
-                          asib.AppleSignInButton(
-                              style: asib.ButtonStyle.black,
-                              type: asib.ButtonType.signIn,
-                              onPressed: () => {
-                                    _signInWithApple(context),
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => Home())),
-                                  }),
+                        // SizedBox(height: 20.0),
+                        // if (appleSignInAvailable.isAvailable)
+                        //   asib.AppleSignInButton(
+                        //       style: asib.ButtonStyle.black,
+                        //       type: asib.ButtonType.signIn,
+                        //       onPressed: () => {
+                        //             _signInWithApple(context),
+                        //             Navigator.of(context).pushReplacement(
+                        //                 MaterialPageRoute(
+                        //                     builder: (context) => Home())),
+                        //           }),
                         SizedBox(height: 10.0),
                         Text.rich(
                           TextSpan(
@@ -191,7 +198,12 @@ Future<void> _signInWithApple(BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     final user = await authService
         .signInWithApple(scopes: [Scope.email, Scope.fullName]);
-    print('uid: ${user.uid}');
+    if (authService != null) {
+      await HelperFunctions.saveUserLoggedInSharedPreference(true);
+      await HelperFunctions.saveUserEmailSharedPreference(user.email);
+      await HelperFunctions.saveUserNameSharedPreference(user.displayName);
+    }
+    print('uid: ${user.displayName}');
     print('uid: ${user.email}');
   } catch (e) {
     // TODO: Show alert here
