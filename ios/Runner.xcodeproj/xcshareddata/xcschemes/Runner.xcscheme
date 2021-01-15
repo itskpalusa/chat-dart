@@ -82,7 +82,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
-      customArchiveName = "DashChat.TF"
+      customArchiveName = "DashChat"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
