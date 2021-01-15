@@ -58,7 +58,6 @@ class _HomeState extends State<Home> {
     final List<Widget> _children = [
       HomeScreen(),
       SearchScreen(),
-      PushScreen(),
       SettingsScreen(userName: _userName, email: _email),
     ];
     if (Platform.isIOS) {
@@ -77,10 +76,7 @@ class _HomeState extends State<Home> {
                     : Icon(Icons.search),
                 label: 'Search',
               ),
-              new BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.bell),
-                label: 'bell',
-              ),
+
               new BottomNavigationBarItem(
                   icon: Platform.isIOS
                       ? Icon(CupertinoIcons.settings)
@@ -97,9 +93,6 @@ class _HomeState extends State<Home> {
                 return SearchScreen();
                 break;
               case 2:
-                return PushScreen();
-                break;
-              case 3:
                 return SettingsScreen(userName: _userName, email: _email);
                 break;
               default:
@@ -122,12 +115,6 @@ class _HomeState extends State<Home> {
             new BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Search',
-            ),
-            new BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-              ),
-              label: 'Bell',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.app_settings_alt_sharp),

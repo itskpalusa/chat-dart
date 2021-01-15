@@ -1,3 +1,4 @@
+import 'package:chat/screens/push_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _ChatSettingsState extends State<ChatSettings> {
   @override
   void initState() {
     super.initState();
+    PushScreen(groupId: widget.groupId, groupName: widget.groupName);
   }
 
   Widget group(BuildContext context) {
@@ -84,6 +86,7 @@ class _ChatSettingsState extends State<ChatSettings> {
 
   @override
   Widget build(BuildContext context) {
+    PushScreen(groupId: widget.groupId, groupName: widget.groupName);
     final groupNameFromWidget = widget.groupName;
     return Scaffold(
       appBar: AppBar(

@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+
+Future<void> saveTokenToDatabase(String token) async {
+  // Assume user is logged in for this example
+  String userId = FirebaseAuth.instance.currentUser.uid;
+
+  await FirebaseFirestore.instance.collection('users').doc(userId).update({
+    'tokens': FieldValue.arrayUnion([token]),
+  });
+}
 
 class ChatScreen extends StatefulWidget {
   final String groupId;
@@ -18,10 +29,88 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  List<String> members;
+
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
   User _user = FirebaseAuth.instance.currentUser;
   ScrollController _scrollController;
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  Future<void> getTokenAndSaveAsync() async {
+
+    String token = await FirebaseMessaging().getToken();
+    await saveTokenToDatabase(token);
+    fcmSubscribe();
+  }
+
+  void fcmSubscribe() {
+    _firebaseMessaging.subscribeToTopic('${widget.groupId}');
+    print('subbed');
+  }
+
+  Widget group(BuildContext context) {
+    return new StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('groups')
+          .doc(widget.groupId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return new Text("Loading");
+        }
+        var userDocument = snapshot.data;
+        members = List.from(userDocument['members']);
+
+        return Scaffold(
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    'Key: ${widget.groupId}',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                  width: 150,
+                  child: Divider(
+                    color: Colors.teal.shade100,
+                  ),
+                ),
+                Container(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Members:',
+                      textAlign: TextAlign.center,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: members.length,
+                      itemBuilder: (context, index) {
+                        return Text(
+                          members[index]
+                              .substring(members[index].indexOf("_") + 1),
+                          textAlign: TextAlign.center,
+                        );
+                      },
+                    )
+                  ],
+                )),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Widget _chatMessages() {
     return StreamBuilder(
@@ -30,8 +119,8 @@ class _ChatScreenState extends State<ChatScreen> {
         return snapshot.hasData
             ? Padding(
                 padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
-                child: ListView.builder(  reverse: true,
-
+                child: ListView.builder(
+                  reverse: true,
                   itemCount: snapshot.data.documents.length,
                   controller: _scrollController,
                   itemBuilder: (context, index) {
@@ -55,7 +144,9 @@ class _ChatScreenState extends State<ChatScreen> {
         "sender": widget.userName,
         'senderId': _user.uid,
         'time': DateTime.now().millisecondsSinceEpoch,
-        'timestamp': Timestamp.now()
+        'timestamp':  FieldValue.serverTimestamp(),
+        'groupId': widget.groupId,
+        'groupName': widget.groupName
       };
 
       DBService().sendMessage(widget.groupId, chatMessageMap);
@@ -67,11 +158,11 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     print(_user.uid);
+    getTokenAndSaveAsync();
     _scrollController = ScrollController();
     DBService().getChats(widget.groupId).then((val) {
       setState(() {

@@ -13,6 +13,11 @@ Future<void> saveTokenToDatabase(String token) async {
 }
 
 class PushScreen extends StatefulWidget {
+  final String groupId;
+  final String groupName;
+
+  PushScreen({this.groupId, this.groupName});
+
   @override
   _PushScreenState createState() => _PushScreenState();
 }
@@ -25,6 +30,13 @@ class _PushScreenState extends State<PushScreen> {
   Future<void> getTokenAndSaveAsync() async {
     String token = await FirebaseMessaging().getToken();
     await saveTokenToDatabase(token);
+    fcmSubscribe();
+  }
+
+  void fcmSubscribe() {
+    _firebaseMessaging.subscribeToTopic('${widget.groupId}');
+
+    print('subbed');
   }
 
   @override
@@ -72,31 +84,6 @@ class _PushScreenState extends State<PushScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Notifications'),
-        ),
-        body: Material(
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text(_homeScreenText),
-              ),
-              Row(children: <Widget>[
-                Expanded(
-                  child: Text(_messageText),
-                ),
-              ])
-            ],
-          ),
-        ));
+    return Scaffold();
   }
-}
-
-void main() {
-  runApp(
-    MaterialApp(
-      home: PushScreen(),
-    ),
-  );
 }

@@ -172,5 +172,5 @@ class DBService {
         .where('groupName', isEqualTo: groupName).where('users', arrayContains: uid)
         .get();
   }
-  
+
 }
