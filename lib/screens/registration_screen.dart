@@ -74,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         });
       } else {
         setState(() {
-          error = 'Error while registering the user!';
+          error = 'Must accept EULA and Terms to continue!';
           _isLoading = false;
         });
       }
