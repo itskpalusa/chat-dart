@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/authentication_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:wiredash/wiredash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isLoggedIn = false;
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -45,16 +47,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chats',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      home: _isLoggedIn != null
-          ? _isLoggedIn
-              ? Home()
-              : AuthenticatePage()
-          : Center(child: CircularProgressIndicator()),
+    return Wiredash(
+      navigatorKey: _navigatorKey,
+      projectId: 'dashchat-etg4vit',
+      secret: 'eh2d6oo7ovmpnlijd7rzaxr1fvi4lkj2unh8k0d2coc2uwmg',
+      child: MaterialApp(
+          navigatorKey: _navigatorKey,
+          title: 'Chats',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          home: _isLoggedIn != null
+              ? _isLoggedIn
+                  ? Home()
+                  : AuthenticatePage()
+              : Center(child: CircularProgressIndicator())),
     );
   }
 }

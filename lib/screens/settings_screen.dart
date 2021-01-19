@@ -1,5 +1,6 @@
 import 'package:chat/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:wiredash/wiredash.dart';
 
 import 'authentication_screen.dart';
 
@@ -43,6 +44,12 @@ class SettingsScreen extends StatelessWidget {
                   Text('Email', style: TextStyle(fontSize: 17.0)),
                   Text(email, style: TextStyle(fontSize: 17.0)),
                 ],
+              ),
+              SizedBox(height: 15.0),
+              ElevatedButton(
+                // launch wiredash where appropriate in your App
+                onPressed: () => Wiredash.of(context).show(),
+                child: Text('Give Feedback'),
               ),
               SizedBox(height: 15.0),
               GestureDetector(

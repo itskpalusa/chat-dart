@@ -23,6 +23,7 @@ dependencies:
   provider: ^4.3.2+2
   url_launcher: ^5.7.10
   firebase_analytics: ^5.0.2
+  wiredash: ^0.4.0
 
 
 dev_dependencies:
