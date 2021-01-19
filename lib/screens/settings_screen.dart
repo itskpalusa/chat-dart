@@ -46,10 +46,20 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 15.0),
-              ElevatedButton(
+              GestureDetector(
                 // launch wiredash where appropriate in your App
-                onPressed: () => Wiredash.of(context).show(),
-                child: Text('Give Feedback'),
+                onTap: () => Wiredash.of(context).show(),
+                child: Container(
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    'Give Feedback',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
               SizedBox(height: 15.0),
               GestureDetector(
