@@ -2,6 +2,7 @@ import 'package:apple_sign_in/apple_sign_in_button.dart' as asib;
 import 'package:apple_sign_in/scope.dart';
 import 'package:chat/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   // text field state
   String email = '';
@@ -71,6 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       });
     }
+  }
+
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   @override
@@ -162,6 +168,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         //                     builder: (context) => Home())),
                         //           }),
                         SizedBox(height: 10.0),
+                        Text.rich(
+                          TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Reset Password',
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    resetPassword(email);
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+
                         Text.rich(
                           TextSpan(
                             text: "Don't have an account? ",
