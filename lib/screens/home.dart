@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'package:chat/services/auth_services.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,6 +17,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+  FirebaseAnalyticsObserver(analytics: analytics);
+
+
+
   final AuthService _auth = AuthService();
   User _user;
   String _userName = '';
@@ -25,6 +33,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _getUserAuth();
+    analytics.setCurrentScreen(screenName: "/nav");
   }
 
   // functions

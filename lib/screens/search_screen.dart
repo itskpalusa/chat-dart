@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
@@ -20,11 +21,13 @@ class _SearchScreenState extends State<SearchScreen> {
   String _userName = '';
   User _user;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
 
   // initState()
   @override
   void initState() {
     super.initState();
+    analytics.setCurrentScreen(screenName: "/search");
     _getCurrentUserNameAndUid();
   }
 

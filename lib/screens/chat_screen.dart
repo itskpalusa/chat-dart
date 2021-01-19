@@ -6,6 +6,7 @@ import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 
 Future<void> saveTokenToDatabase(String token) async {
@@ -30,7 +31,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   List<String> members;
-
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
   User _user = FirebaseAuth.instance.currentUser;
@@ -161,7 +162,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    print(_user.uid);
+    analytics.setCurrentScreen(screenName: "/chat/${widget.groupId}");
+    print("/chat/${widget.groupId}");
     getTokenAndSaveAsync();
     _scrollController = ScrollController();
     DBService().getChats(widget.groupId).then((val) {

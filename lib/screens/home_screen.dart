@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,11 +23,14 @@ class _HomeScreenState extends State<HomeScreen> {
   String _userName = '';
   String _email = '';
   Stream _groups;
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
 
   // initState
   @override
   void initState() {
     super.initState();
+    analytics.setCurrentScreen(screenName: "/home");
+
     _getUserAuthAndJoinedGroups();
     final fbm = FirebaseMessaging();
     fbm.requestNotificationPermissions();
