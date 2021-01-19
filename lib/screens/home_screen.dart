@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:chat/screens/search_private_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -223,6 +224,15 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               _popupDialog(context);
             },
+          ),
+          IconButton(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            icon: Icon(Icons.add, size: 25.0),
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => SearchPrivateScreen()),
+                      (Route<dynamic> route) => true);            },
           ),
         ],
       ),

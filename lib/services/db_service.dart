@@ -55,7 +55,7 @@ class DBService {
       'groupIcon': '',
       'admin': userName,
       'members': [],
-      //'messages': ,
+      'private': false,
       'groupId': '',
       'recentMessage': '',
       'recentMessageSender': ''
@@ -162,15 +162,32 @@ class DBService {
     return FirebaseFirestore.instance
         .collection("groups")
         .where('groupName', isEqualTo: groupName)
+        .where('private', isEqualTo: false)
         .get();
   }
 
-  // Search Groups by Name
+  // Search User's Groups by Name
   searchByNamePrivate(String groupName) {
     return FirebaseFirestore.instance
         .collection("groups")
-        .where('groupName', isEqualTo: groupName).where('users', arrayContains: uid)
+        .where('groupName', isEqualTo: groupName)
+        .where('users', arrayContains: uid)
         .get();
   }
 
+  // Search Groups by Token/Key if Private & Add w/ Token
+  searchForPrivateGroup(String groupId) async {
+    return FirebaseFirestore.instance
+        .collection("groups")
+        .where('groupId', isEqualTo: groupId)
+        .where('private', isEqualTo: true)
+        .get();
+  }
+
+// Toggle Group Privacy
+  Future toggleGroupPrivacy(String groupId, bool privateStatus) async {
+    DocumentReference groupDocRef = groupCollection.doc(groupId);
+
+    await groupDocRef.update({'private': privateStatus});
+  }
 }

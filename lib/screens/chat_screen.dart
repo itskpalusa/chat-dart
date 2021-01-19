@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
-
 Future<void> saveTokenToDatabase(String token) async {
   // Assume user is logged in for this example
   String userId = FirebaseAuth.instance.currentUser.uid;
@@ -31,6 +30,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   List<String> members;
+  bool isPrivate;
+  String admin;
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
@@ -40,7 +41,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Future<void> getTokenAndSaveAsync() async {
-
     String token = await FirebaseMessaging().getToken();
     await saveTokenToDatabase(token);
     fcmSubscribe();
@@ -63,7 +63,8 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         var userDocument = snapshot.data;
         members = List.from(userDocument['members']);
-
+        isPrivate = userDocument['private'];
+        admin = userDocument['admin'];
         return Scaffold(
           body: SafeArea(
             child: Column(
@@ -145,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
         "sender": widget.userName,
         'senderId': _user.uid,
         'time': DateTime.now().millisecondsSinceEpoch,
-        'timestamp':  FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
         'groupId': widget.groupId,
         'groupName': widget.groupName
       };
@@ -190,7 +191,10 @@ class _ChatScreenState extends State<ChatScreen> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ChatSettings(
-                      groupId: widget.groupId, groupName: widget.groupName),
+                      groupId: widget.groupId,
+                      groupName: widget.groupName,
+                      private: isPrivate,
+                      admin: admin),
                 ),
               );
             },
