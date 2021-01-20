@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<String> members;
   bool isPrivate;
   String admin;
+
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
@@ -186,11 +187,11 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(
               Icons.settings,
             ),
-            onPressed: () {
+            onPressed: () async {
               // do something
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ChatSettings(
+                  builder: await (context) => ChatSettings(
                       groupId: widget.groupId,
                       groupName: widget.groupName,
                       private: isPrivate,

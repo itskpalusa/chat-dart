@@ -50,11 +50,11 @@ class _ChatSettingsState extends State<ChatSettings> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            new Text("Loading");
+            return new Text("Loading");
           }
-          var userDocument = snapshot.data;
 
-          if (_userName == widget.admin) {
+          var userDocument = snapshot.data;
+          if (_userName == userDocument['admin']) {
             return Container(
               alignment: Alignment.center,
               child: Column(
@@ -206,6 +206,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                   ),
                 ),
                 showIfAdmin(),
+                SizedBox(height: 15.0),
                 Text(
                   'Members:',
                   textAlign: TextAlign.center,
