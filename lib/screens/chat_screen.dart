@@ -49,6 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void fcmSubscribe() {
     _firebaseMessaging.subscribeToTopic('${widget.groupId}');
+    _firebaseMessaging.getToken().then((token) => print(token));
     print('subbed');
   }
 

@@ -25,8 +25,7 @@ class SettingsScreen extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 100.0),
         child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: ListView(
             children: <Widget>[
               Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]),
               SizedBox(height: 15.0),
