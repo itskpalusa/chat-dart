@@ -1,11 +1,14 @@
 import 'package:chat/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wiredash/wiredash.dart';
 
 import 'authentication_screen.dart';
-
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
   final String userName;
@@ -19,7 +22,10 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final AuthService _auth = AuthService();
-  String profilePicUrl = " ";
+  String profilePicUrl;
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+  String imageUrl;
 
   // initState
   @override
@@ -35,9 +41,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
         .collection("users")
         .doc(firebaseUser.uid)
         .get()
-        .then((value) {
-      profilePicUrl = value.data()['profilePic'];
-    });
+        .then(await (value) {
+          profilePicUrl = value.data()['profilePic'];
+        });
+  }
+
+  uploadImage() async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final _imagePicker = ImagePicker();
+    PickedFile image;
+
+    //Select Image
+    image = await _imagePicker.getImage(source: ImageSource.gallery);
+    var file = File(image.path);
+
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await _firebaseStorage
+          .ref()
+          .child('images/${widget.userName}profilePic')
+          .putFile(await file);
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        imageUrl = downloadUrl;
+      });
+    } else {
+      print('No Image Path Received');
+    }
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser.uid)
+        .update(<String, dynamic>{'profilePic': imageUrl});
   }
 
   @override
@@ -47,13 +83,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       display =
           Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
     } else {
-      display =
-          Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
-      // display = CircleAvatar(
-      //   backgroundImage: NetworkImage(profilePicUrl),
-      //   onBackgroundImageError: null,
-      //   radius: 100,
-      // );
+      display = CircleAvatar(
+        backgroundImage: NetworkImage(profilePicUrl),
+        onBackgroundImageError: null,
+        radius: 100,
+      );
     }
 
     return Scaffold(
@@ -71,6 +105,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: ListView(
             children: <Widget>[
               display,
+              ElevatedButton(
+                onPressed: () {
+                  uploadImage();
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.blue;
+                    return null; // Use the component's default.
+                  },
+                )),
+                child: Text(
+                  'Change Profile Picture',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
               SizedBox(height: 15.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
