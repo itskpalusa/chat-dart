@@ -24,6 +24,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>App needs access to camera to send photos, and add profile pictures</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library is required to add profile pictures, and share images.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -44,10 +48,6 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo Library is required to add profile pictures, and share images.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>App needs access to camera to send photos, and add profile pictures</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
