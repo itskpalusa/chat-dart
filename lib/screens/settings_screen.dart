@@ -47,11 +47,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       display =
           Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
     } else {
-      display = CircleAvatar(
-        backgroundImage: NetworkImage(profilePicUrl),
-        onBackgroundImageError: null,
-        radius: 100,
-      );
+      display =
+          Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
+      // display = CircleAvatar(
+      //   backgroundImage: NetworkImage(profilePicUrl),
+      //   onBackgroundImageError: null,
+      //   radius: 100,
+      // );
     }
 
     return Scaffold(
