@@ -178,11 +178,6 @@ class _ChatScreenState extends State<ChatScreen> {
         _chats = val;
       });
     });
-    _scrollController.animateTo(
-      _scrollController.position.minScrollExtent,
-      duration: Duration(seconds: 1),
-      curve: Curves.fastOutSlowIn,
-    );
   }
 
   @override
