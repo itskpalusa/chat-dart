@@ -116,6 +116,10 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  _scrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
   Widget _chatMessages() {
     return StreamBuilder(
       stream: _chats,
@@ -157,7 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       setState(() {
         messageEditingController.text = "";
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
       });
     }
   }
@@ -174,6 +178,11 @@ class _ChatScreenState extends State<ChatScreen> {
         _chats = val;
       });
     });
+    _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
