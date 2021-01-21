@@ -1,18 +1,59 @@
 import 'package:chat/services/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:wiredash/wiredash.dart';
 
 import 'authentication_screen.dart';
 
-class SettingsScreen extends StatelessWidget {
+
+class SettingsScreen extends StatefulWidget {
   final String userName;
   final String email;
-  final AuthService _auth = AuthService();
 
   SettingsScreen({this.userName, this.email});
 
   @override
+  _SettingsScreenState createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final AuthService _auth = AuthService();
+  String profilePicUrl = " ";
+
+  // initState
+  @override
+  void initState() {
+    super.initState();
+    _getUserAuth();
+  }
+
+  // functions
+  _getUserAuth() async {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser.uid)
+        .get()
+        .then((value) {
+      profilePicUrl = value.data()['profilePic'];
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Widget display;
+    if (profilePicUrl == null) {
+      display =
+          Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
+    } else {
+      display = CircleAvatar(
+        backgroundImage: NetworkImage(profilePicUrl),
+        onBackgroundImageError: null,
+        radius: 100,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings',
@@ -27,13 +68,13 @@ class SettingsScreen extends StatelessWidget {
         child: Container(
           child: ListView(
             children: <Widget>[
-              Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]),
+              display,
               SizedBox(height: 15.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('Full Name', style: TextStyle(fontSize: 17.0)),
-                  Text(userName, style: TextStyle(fontSize: 17.0)),
+                  Text(widget.userName, style: TextStyle(fontSize: 17.0)),
                 ],
               ),
               Divider(height: 20.0),
@@ -41,47 +82,45 @@ class SettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('Email', style: TextStyle(fontSize: 17.0)),
-                  Text(email, style: TextStyle(fontSize: 17.0)),
+                  Text(widget.email, style: TextStyle(fontSize: 17.0)),
                 ],
               ),
               SizedBox(height: 15.0),
-              GestureDetector(
-                // launch wiredash where appropriate in your App
-                onTap: () => Wiredash.of(context).show(),
-                child: Container(
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Give Feedback',
-                    style: TextStyle(color: Colors.white),
-                  ),
+              ElevatedButton(
+                onPressed: () => Wiredash.of(context).show(),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.blue;
+                    return null; // Use the component's default.
+                  },
+                )),
+                child: Text(
+                  'Give Feedback',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
               SizedBox(height: 15.0),
-              GestureDetector(
-                onTap: () async {
+              ElevatedButton(
+                onPressed: () async {
                   await _auth.signOut();
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                           builder: (context) => AuthenticatePage()),
                       (Route<dynamic> route) => false);
                 },
-                // The custom button
-                child: Container(
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red, // background
+                  onPrimary: Colors.white, // foreground
                 ),
-              )
+                child: Text(
+                  'Logout',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/push_screen.dart';
+import 'package:chat/screens/report_screen.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -201,7 +202,24 @@ class _ChatSettingsState extends State<ChatSettings> {
                         'Chat Privacy: ${_isPrivate ? "Public" : "Private"}',
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 15.0),
+                      SizedBox(height: 5.0),
+                      GestureDetector(
+                          onTap: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReportScreen()))
+                              },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.red,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            child: Text('Report a Message?',
+                                style: TextStyle(color: Colors.white)),
+                          )),
                     ],
                   ),
                 ),

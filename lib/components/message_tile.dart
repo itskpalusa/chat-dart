@@ -1,7 +1,7 @@
 import 'package:chat/screens/home_screen.dart';
 import 'package:chat/screens/report_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 class MessageTile extends StatelessWidget {
   final String message;
   final String sender;
@@ -11,11 +11,22 @@ class MessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final key = new GlobalKey<ScaffoldState>();
+
+    return  GestureDetector(
         onLongPress: () {
+
+
           print("PRESSED");
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ReportScreen()));
+
+          Clipboard.setData(new ClipboardData( text:(message)),);
+          print(message);
+
+          BuildContext con=context;
+          final snackBar = SnackBar(content: new Text("Copied!"));
+          Scaffold.of(con).showSnackBar(snackBar);
+     //     Navigator.push(
+     //         context, MaterialPageRoute(builder: (context) => ReportScreen()));
         },
         child: SafeArea(
             child: Container(
