@@ -27,16 +27,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
       firebase_storage.FirebaseStorage.instance;
   String imageUrl;
 
+  User firebaseUser;
+
   // initState
   @override
   void initState() {
     super.initState();
+    firebaseUser = FirebaseAuth.instance.currentUser;
+    imageCache.clear();
+
     _getUserAuth();
   }
 
   // functions
   _getUserAuth() async {
-    var firebaseUser = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
         .collection("users")
         .doc(firebaseUser.uid)
@@ -50,16 +54,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final _firebaseStorage = FirebaseStorage.instance;
     final _imagePicker = ImagePicker();
     PickedFile image;
-
+    User firebaseUser = FirebaseAuth.instance.currentUser;
+    String userID = firebaseUser.uid;
     //Select Image
     image = await _imagePicker.getImage(source: ImageSource.gallery);
+
     var file = File(image.path);
 
     if (image != null) {
       //Upload to Firebase
       var snapshot = await _firebaseStorage
           .ref()
-          .child('images/${widget.userName}profilePic')
+          .child('profilePictures/$userID')
           .putFile(await file);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
@@ -68,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } else {
       print('No Image Path Received');
     }
-    var firebaseUser = FirebaseAuth.instance.currentUser;
+    firebaseUser = FirebaseAuth.instance.currentUser;
 
     FirebaseFirestore.instance
         .collection("users")
@@ -76,19 +82,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
         .update(<String, dynamic>{'profilePic': imageUrl});
   }
 
+  Future<String> getProfilePicUrl() async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(firebaseUser.uid)
+        .get()
+        .then((value) {
+      profilePicUrl = value.data()['profilePic'];
+    });
+    return profilePicUrl;
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget display;
-    if (profilePicUrl == null) {
-      display =
-          Icon(Icons.account_circle, size: 200.0, color: Colors.grey[700]);
-    } else {
-      display = CircleAvatar(
-        backgroundImage: NetworkImage(profilePicUrl),
-        onBackgroundImageError: null,
-        radius: 100,
-      );
-    }
+    display = new FutureBuilder<String>(
+        future: getProfilePicUrl(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return new CircleAvatar(
+              backgroundImage: NetworkImage(profilePicUrl),
+              onBackgroundImageError: null,
+              radius: 100,
+            );
+          } else if (snapshot.hasError) {
+            return new Text("${snapshot.error}");
+          }
+          // By default, show a loading spinner
+          return new CircularProgressIndicator();
+        });
 
     return Scaffold(
       appBar: AppBar(

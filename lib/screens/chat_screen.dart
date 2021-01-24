@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<String> members;
   bool isPrivate;
   String admin;
-
+  String profilePicUrl;
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   Stream<QuerySnapshot> _chats;
   TextEditingController messageEditingController = new TextEditingController();
@@ -50,7 +50,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void fcmSubscribe() {
     _firebaseMessaging.subscribeToTopic('${widget.groupId}');
     _firebaseMessaging.getToken().then((token) => print(token));
-    print('subbed');
   }
 
   Widget group(BuildContext context) {
@@ -67,6 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
         members = List.from(userDocument['members']);
         isPrivate = userDocument['private'];
         admin = userDocument['admin'];
+
         return Scaffold(
           body: SafeArea(
             child: Column(
@@ -89,25 +89,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 Container(
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Members:',
-                      textAlign: TextAlign.center,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: members.length,
-                      itemBuilder: (context, index) {
-                        return Text(
-                          members[index]
-                              .substring(members[index].indexOf("_") + 1),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Members:',
                           textAlign: TextAlign.center,
-                        );
-                      },
-                    )
-                  ],
-                )),
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: members.length,
+                          itemBuilder: (context, index) {
+                            return Text(
+                              members[index]
+                                  .substring(members[index].indexOf("_") + 1),
+                              textAlign: TextAlign.center,
+                            );
+                          },
+                        )
+                      ],
+                    )),
               ],
             ),
           ),
@@ -116,30 +116,27 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  _scrollToBottom() {
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-  }
-
   Widget _chatMessages() {
     return StreamBuilder(
       stream: _chats,
       builder: (context, snapshot) {
         return snapshot.hasData
             ? Padding(
-                padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
-                child: ListView.builder(
-                  reverse: true,
-                  itemCount: snapshot.data.documents.length,
-                  controller: _scrollController,
-                  itemBuilder: (context, index) {
-                    return MessageTile(
-                      message: snapshot.data.documents[index].data()["message"],
-                      sender: snapshot.data.documents[index].data()["sender"],
-                      sentByMe: _user.uid ==
-                          snapshot.data.documents[index].data()["senderId"],
-                    );
-                  },
-                ))
+            padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
+            child: ListView.builder(
+              reverse: true,
+              itemCount: snapshot.data.documents.length,
+              controller: _scrollController,
+              itemBuilder: (context, index) {
+                return MessageTile(
+                  message: snapshot.data.documents[index].data()["message"],
+                  sender: snapshot.data.documents[index].data()["sender"],
+                  sentByMe: _user.uid ==
+                      snapshot.data.documents[index].data()["senderId"],
+                  senderId: snapshot.data.documents[index].data()["senderId"],
+                );
+              },
+            ))
             : Container();
       },
     );
@@ -151,7 +148,9 @@ class _ChatScreenState extends State<ChatScreen> {
         "message": messageEditingController.text,
         "sender": widget.userName,
         'senderId': _user.uid,
-        'time': DateTime.now().millisecondsSinceEpoch,
+        'time': DateTime
+            .now()
+            .millisecondsSinceEpoch,
         'timestamp': FieldValue.serverTimestamp(),
         'groupId': widget.groupId,
         'groupName': widget.groupName
@@ -196,11 +195,12 @@ class _ChatScreenState extends State<ChatScreen> {
               // do something
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: await (context) => ChatSettings(
-                      groupId: widget.groupId,
-                      groupName: widget.groupName,
-                      private: isPrivate,
-                      admin: admin),
+                  builder: await (context) =>
+                      ChatSettings(
+                          groupId: widget.groupId,
+                          groupName: widget.groupName,
+                          private: isPrivate,
+                          admin: admin),
                 ),
               );
             },
@@ -214,7 +214,10 @@ class _ChatScreenState extends State<ChatScreen> {
             // Container(),
             Container(
               alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                 color: Colors.grey[700],

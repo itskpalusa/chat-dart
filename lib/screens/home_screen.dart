@@ -232,7 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                       builder: (context) => SearchPrivateScreen()),
-                      (Route<dynamic> route) => true);            },
+                  (Route<dynamic> route) => true);
+            },
           ),
         ],
       ),
