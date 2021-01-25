@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_downloader/image_downloader.dart';
 
 class ImageDetailScreen extends StatefulWidget {
   final String image;
@@ -20,6 +22,27 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
           ),
           onTap: () {
             Navigator.pop(context);
+          },
+          onLongPress: () async {
+            try {
+              // Saved with this method.
+              var imageId = await ImageDownloader.downloadImage(widget.image);
+              if (imageId == null) {
+                return;
+              }
+
+              // Below is a method of obtaining saved image information.
+              var fileName = await ImageDownloader.findName(imageId);
+              var path = await ImageDownloader.findPath(imageId);
+              var size = await ImageDownloader.findByteSize(imageId);
+              var mimeType = await ImageDownloader.findMimeType(imageId);
+            } on PlatformException catch (error) {
+              print(error);
+            }
+            BuildContext con = context;
+            final snackBar = SnackBar(content: new Text("Saved Image"));
+            Scaffold.of(con).showSnackBar(snackBar);
+            print('pop');
           },
         ),
       ),
