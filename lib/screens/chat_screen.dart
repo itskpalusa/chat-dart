@@ -76,49 +76,47 @@ class _ChatScreenState extends State<ChatScreen> {
         isPrivate = userDocument['private'];
         admin = userDocument['admin'];
 
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    'Key: ${widget.groupId}',
-                    style: TextStyle(fontSize: 20),
+        return SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  'Key: ${widget.groupId}',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: 20,
+                width: 150,
+                child: Divider(
+                  color: Colors.teal.shade100,
+                ),
+              ),
+              Container(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Members:',
                     textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                  width: 150,
-                  child: Divider(
-                    color: Colors.teal.shade100,
-                  ),
-                ),
-                Container(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Members:',
-                      textAlign: TextAlign.center,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: members.length,
-                      itemBuilder: (context, index) {
-                        return Text(
-                          members[index]
-                              .substring(members[index].indexOf("_") + 1),
-                          textAlign: TextAlign.center,
-                        );
-                      },
-                    )
-                  ],
-                )),
-              ],
-            ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: members.length,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        members[index]
+                            .substring(members[index].indexOf("_") + 1),
+                        textAlign: TextAlign.center,
+                      );
+                    },
+                  )
+                ],
+              )),
+            ],
           ),
         );
       },
@@ -246,6 +244,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text(widget.groupName),
         centerTitle: true,
