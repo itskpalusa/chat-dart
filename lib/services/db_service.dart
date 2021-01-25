@@ -147,6 +147,21 @@ class DBService {
     });
   }
 
+  // Send a Message
+  sendAttachment(String groupId, chatAttachmentData) {
+    FirebaseFirestore.instance
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .add(chatAttachmentData);
+    FirebaseFirestore.instance.collection('groups').doc(groupId).update({
+      'recentMessage': chatAttachmentData['message'],
+      'recentMessageSender': chatAttachmentData['sender'],
+      'recentMessageTime': chatAttachmentData['time'].toString(),
+    });
+  }
+
+
   // get Group Conversation
   getChats(String groupId) async {
     return FirebaseFirestore.instance

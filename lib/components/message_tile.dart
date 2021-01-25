@@ -1,3 +1,4 @@
+import 'package:chat/screens/image_detail_screen.dart';
 import 'package:chat/screens/user_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,8 +12,14 @@ class MessageTile extends StatefulWidget {
   final String sender;
   final bool sentByMe;
   final String senderId;
+  final String attachment;
 
-  MessageTile({this.message, this.sender, this.sentByMe, this.senderId});
+  MessageTile(
+      {this.message,
+      this.sender,
+      this.sentByMe,
+      this.senderId,
+      this.attachment});
 
   @override
   _MessageTileState createState() => _MessageTileState();
@@ -45,41 +52,69 @@ class _MessageTileState extends State<MessageTile> {
 
   @override
   Widget build(BuildContext context) {
+    String url = widget.attachment;
+    Widget attachment;
+    if (url != null)
+      attachment = Image.network(
+        url,
+        scale: 10,
+      );
+    else
+      attachment = SizedBox(height: 0);
+
     Widget profilePicture;
     profilePicture = new FutureBuilder<String>(
-        future: getUserProfilePicUrl(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return new CircleAvatar(
-              backgroundImage: NetworkImage(
-                userProfilePicUrl,
-              ),
-              onBackgroundImageError: null,
-              radius: 15,
-            );
-          } else if (snapshot.hasError) {
-            return new Text("${snapshot.error}");
-          }
-          // By default, show a loading spinner
-          return new CircularProgressIndicator();
-        });
+      future: getUserProfilePicUrl(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return new CircleAvatar(
+            backgroundImage: NetworkImage(
+              userProfilePicUrl,
+            ),
+            onBackgroundImageError: null,
+            radius: 15,
+          );
+        } else if (snapshot.hasError) {
+          return new Text("${snapshot.error}");
+        }
+        // By default, show a loading spinner
+        return new CircularProgressIndicator();
+      },
+    );
 
     return GestureDetector(
+        onDoubleTap: () {
+          if (url != null) {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (_) {
+                return ImageDetailScreen(
+                  image: url,
+                );
+              },
+            ));
+          } else {
+            BuildContext con = context;
+            final snackBar = SnackBar(content: new Text("No image"));
+            Scaffold.of(con).showSnackBar(snackBar);
+          }
+        },
         onLongPress: () {
           Clipboard.setData(
             new ClipboardData(text: (widget.message)),
           );
-
           BuildContext con = context;
           final snackBar = SnackBar(content: new Text("Copied!"));
           Scaffold.of(con).showSnackBar(snackBar);
         },
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).push(
+            MaterialPageRoute(
               builder: (context) => UserProfileScreen(
-                    userName: widget.sender,
-                    userId: widget.senderId,
-                  )));
+                userName: widget.sender,
+                userId: widget.senderId,
+              ),
+            ),
+          );
         },
         child: SafeArea(
             child: Container(
@@ -110,20 +145,23 @@ class _MessageTileState extends State<MessageTile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(children: [
-                  widget.sentByMe ? SizedBox(height: 0) : profilePicture,
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(widget.sender,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.5)),
-                ]),
+                Row(
+                  children: [
+                    widget.sentByMe ? SizedBox(height: 0) : profilePicture,
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(widget.sender,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5)),
+                  ],
+                ),
                 SizedBox(height: 7.0),
+                attachment,
                 Text(
                   widget.message,
                   textAlign: TextAlign.start,

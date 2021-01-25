@@ -1,12 +1,16 @@
 import 'package:chat/screens/chat_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 Future<void> saveTokenToDatabase(String token) async {
   // Assume user is logged in for this example
@@ -40,6 +44,11 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController _scrollController;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  // For Attachment(IMages)
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+  String imageUrl;
 
   Future<void> getTokenAndSaveAsync() async {
     String token = await FirebaseMessaging().getToken();
@@ -89,25 +98,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 Container(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Members:',
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Members:',
+                      textAlign: TextAlign.center,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: members.length,
+                      itemBuilder: (context, index) {
+                        return Text(
+                          members[index]
+                              .substring(members[index].indexOf("_") + 1),
                           textAlign: TextAlign.center,
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: members.length,
-                          itemBuilder: (context, index) {
-                            return Text(
-                              members[index]
-                                  .substring(members[index].indexOf("_") + 1),
-                              textAlign: TextAlign.center,
-                            );
-                          },
-                        )
-                      ],
-                    )),
+                        );
+                      },
+                    )
+                  ],
+                )),
               ],
             ),
           ),
@@ -122,21 +131,27 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? Padding(
-            padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
-            child: ListView.builder(
-              reverse: true,
-              itemCount: snapshot.data.documents.length,
-              controller: _scrollController,
-              itemBuilder: (context, index) {
-                return MessageTile(
-                  message: snapshot.data.documents[index].data()["message"],
-                  sender: snapshot.data.documents[index].data()["sender"],
-                  sentByMe: _user.uid ==
-                      snapshot.data.documents[index].data()["senderId"],
-                  senderId: snapshot.data.documents[index].data()["senderId"],
-                );
-              },
-            ))
+                padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
+                child: ListView.builder(
+                  reverse: true,
+                  itemCount: snapshot.data.documents.length,
+                  controller: _scrollController,
+                  itemBuilder: (context, index) {
+                    return MessageTile(
+                      message: snapshot.data.documents[index].data()["message"],
+                      sender: snapshot.data.documents[index].data()["sender"],
+                      sentByMe: _user.uid ==
+                          snapshot.data.documents[index].data()["senderId"],
+                      senderId:
+                          snapshot.data.documents[index].data()["senderId"],
+                      attachment: (snapshot.data.documents[index]
+                                  .data()["attachment"] !=
+                              null)
+                          ? snapshot.data.documents[index].data()["attachment"]
+                          : null,
+                    );
+                  },
+                ))
             : Container();
       },
     );
@@ -148,9 +163,7 @@ class _ChatScreenState extends State<ChatScreen> {
         "message": messageEditingController.text,
         "sender": widget.userName,
         'senderId': _user.uid,
-        'time': DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        'time': DateTime.now().millisecondsSinceEpoch,
         'timestamp': FieldValue.serverTimestamp(),
         'groupId': widget.groupId,
         'groupName': widget.groupName
@@ -163,6 +176,57 @@ class _ChatScreenState extends State<ChatScreen> {
         _scrollController.jumpTo(_scrollController.position.minScrollExtent);
       });
     }
+  }
+
+  uploadImageAttachment() async {
+    final _firebaseStorage = FirebaseStorage.instance;
+    final _imagePicker = ImagePicker();
+    PickedFile image;
+    User firebaseUser = FirebaseAuth.instance.currentUser;
+    String groupName = widget.groupName;
+    String groupId = widget.groupId;
+    String timeSeconds = DateTime.now().millisecondsSinceEpoch.toString();
+    var imageAttachmentName = groupName + groupId + timeSeconds;
+    //Select Image
+    image = await _imagePicker.getImage(source: ImageSource.gallery);
+
+    var file = File(image.path);
+
+    if (image != null) {
+      //Upload to Firebase
+      var snapshot = await _firebaseStorage
+          .ref()
+          .child('attachments/$imageAttachmentName')
+          .putFile(await file);
+      var downloadUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        imageUrl = downloadUrl;
+      });
+    } else {
+      print('No Image Path Received');
+    }
+    firebaseUser = FirebaseAuth.instance.currentUser;
+    Map<String, dynamic> chatAndAttachmentMessageMap = {
+      "message": messageEditingController.text,
+      "attachment": imageUrl,
+      "sender": widget.userName,
+      'senderId': _user.uid,
+      'time': DateTime.now().millisecondsSinceEpoch,
+      'timestamp': FieldValue.serverTimestamp(),
+      'groupId': widget.groupId,
+      'groupName': widget.groupName
+    };
+
+    FirebaseFirestore.instance
+        .collection("groups")
+        .doc(groupId)
+        .update(<String, dynamic>{'profilePic': imageUrl});
+
+    DBService().sendAttachment(widget.groupId, chatAndAttachmentMessageMap);
+    setState(() {
+      messageEditingController.text = "";
+      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+    });
   }
 
   @override
@@ -195,12 +259,11 @@ class _ChatScreenState extends State<ChatScreen> {
               // do something
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: await (context) =>
-                      ChatSettings(
-                          groupId: widget.groupId,
-                          groupName: widget.groupName,
-                          private: isPrivate,
-                          admin: admin),
+                  builder: await (context) => ChatSettings(
+                      groupId: widget.groupId,
+                      groupName: widget.groupName,
+                      private: isPrivate,
+                      admin: admin),
                 ),
               );
             },
@@ -211,13 +274,9 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Stack(
           children: <Widget>[
             _chatMessages(),
-            // Container(),
             Container(
               alignment: Alignment.bottomCenter,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                 color: Colors.grey[700],
@@ -234,6 +293,16 @@ class _ChatScreenState extends State<ChatScreen> {
                               fontSize: 16,
                             ),
                             border: InputBorder.none),
+                      ),
+                    ),
+                    SizedBox(width: 12.0),
+                    GestureDetector(
+                      onTap: () {
+                        uploadImageAttachment();
+                      },
+                      child: RotatedBox(
+                        quarterTurns: 0,
+                        child: Icon(Icons.image),
                       ),
                     ),
                     SizedBox(width: 12.0),
