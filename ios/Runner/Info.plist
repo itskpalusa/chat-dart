@@ -26,10 +26,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>App needs access to camera to send photos, and add profile pictures.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Photo Library is required to add profile pictures, and share images.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Additional access is required to enable downloading images to device. </string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library is required to add profile pictures, and share images.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
