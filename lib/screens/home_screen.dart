@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Create a group"),
         content: TextField(
             onChanged: (val) {
-              _groupName = val;
+              _groupName = val.trimRight();
             },
             style: TextStyle(fontSize: 15.0, height: 2.0)),
         actions: [
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Create a group"),
         content: CupertinoTextField(
           onChanged: (val) {
-            _groupName = val;
+            _groupName = val.trimRight();
           },
           style: TextStyle(
               fontSize: 15.0,

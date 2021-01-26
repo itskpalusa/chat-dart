@@ -45,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
         isLoading = true;
       });
       await DBService()
-          .searchByName(searchEditingController.text)
+          .searchByName(searchEditingController.text.trimRight())
           .then((snapshot) {
         searchResultSnapshot = snapshot;
         setState(() {
