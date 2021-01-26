@@ -83,7 +83,7 @@ class _MessageTileState extends State<MessageTile> {
     );
 
     return GestureDetector(
-        onDoubleTap: () {
+        onTap: () {
           if (url != null) {
             Navigator.push(context, MaterialPageRoute(
               builder: (_) {
@@ -94,7 +94,7 @@ class _MessageTileState extends State<MessageTile> {
             ));
           } else {
             BuildContext con = context;
-            final snackBar = SnackBar(content: new Text("No image"));
+            final snackBar = SnackBar(content: new Text("No image to expand"));
             Scaffold.of(con).showSnackBar(snackBar);
           }
         },
@@ -105,16 +105,6 @@ class _MessageTileState extends State<MessageTile> {
           BuildContext con = context;
           final snackBar = SnackBar(content: new Text("Copied!"));
           Scaffold.of(con).showSnackBar(snackBar);
-        },
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => UserProfileScreen(
-                userName: widget.sender,
-                userId: widget.senderId,
-              ),
-            ),
-          );
         },
         child: SafeArea(
             child: Container(
@@ -151,13 +141,25 @@ class _MessageTileState extends State<MessageTile> {
                     SizedBox(
                       width: 8,
                     ),
-                    Text(widget.sender,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -0.5)),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UserProfileScreen(
+                              userName: widget.sender,
+                              userId: widget.senderId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(widget.sender,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5)),
+                    ),
                   ],
                 ),
                 SizedBox(height: 7.0),
