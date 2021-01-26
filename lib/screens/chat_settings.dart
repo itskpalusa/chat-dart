@@ -237,25 +237,6 @@ class _ChatSettingsState extends State<ChatSettings> {
             child: ListView(
               children: <Widget>[
                 displayGroupIcon,
-                ElevatedButton(
-                  onPressed: () {
-                    uploadGroupIconImage();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed))
-                          return Colors.blue;
-                        return null; // Use the component's default.
-                      },
-                    ),
-                  ),
-                  child: Text(
-                    'Change Profile Picture',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
                 GestureDetector(
                   child: Container(
                     child: Text(
@@ -285,28 +266,49 @@ class _ChatSettingsState extends State<ChatSettings> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 15),
+                      GestureDetector(
+                        onTap: () {
+                          uploadGroupIconImage();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.lightBlue,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          child: Text(
+                            'Change Group Icon',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       Text(
                         'Chat Privacy: ${_isPrivate ? "Public" : "Private"}',
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 5.0),
                       GestureDetector(
-                          onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ReportScreen()))
-                              },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.red,
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReportScreen(),
                             ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            child: Text('Report a Message?',
-                                style: TextStyle(color: Colors.white)),
-                          )),
+                          )
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.red,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          child: Text('Report a Message?',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -321,14 +323,15 @@ class _ChatSettingsState extends State<ChatSettings> {
                   itemCount: members.length,
                   itemBuilder: (context, index) {
                     return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            members[index]
-                                .substring(members[index].indexOf("_") + 1),
-                            textAlign: TextAlign.center,
-                          ),
-                        ]);
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          members[index]
+                              .substring(members[index].indexOf("_") + 1),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    );
                   },
                 )
               ],
