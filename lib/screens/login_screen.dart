@@ -1,5 +1,3 @@
-import 'package:apple_sign_in/apple_sign_in_button.dart' as asib;
-import 'package:apple_sign_in/scope.dart';
 import 'package:chat/screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +9,6 @@ import 'package:chat/services/db_service.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/loading.dart';
 import 'package:provider/provider.dart';
-import 'apple_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
@@ -81,9 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appleSignInAvailable =
-        Provider.of<AppleSignInAvailable>(context, listen: false);
-
     return _isLoading
         ? Loading()
         : Scaffold(
@@ -104,7 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 100,
                         ),
                         SizedBox(height: 20.0),
-
                         Text("DashChat",
                             style: TextStyle(
                                 fontSize: 40.0, fontWeight: FontWeight.bold)),
@@ -156,17 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _onSignIn();
                               }),
                         ),
-                        // SizedBox(height: 20.0),
-                        // if (appleSignInAvailable.isAvailable)
-                        //   asib.AppleSignInButton(
-                        //       style: asib.ButtonStyle.black,
-                        //       type: asib.ButtonType.signIn,
-                        //       onPressed: () => {
-                        //             _signInWithApple(context),
-                        //             Navigator.of(context).pushReplacement(
-                        //                 MaterialPageRoute(
-                        //                     builder: (context) => Home())),
-                        //           }),
                         SizedBox(height: 10.0),
                         Text.rich(
                           TextSpan(
@@ -184,7 +166,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         SizedBox(height: 10.0),
-
                         Text.rich(
                           TextSpan(
                             text: "Don't have an account? ",
@@ -213,23 +194,5 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           );
-  }
-}
-
-Future<void> _signInWithApple(BuildContext context) async {
-  try {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final user = await authService
-        .signInWithApple(scopes: [Scope.email, Scope.fullName]);
-    if (authService != null) {
-      await HelperFunctions.saveUserLoggedInSharedPreference(true);
-      await HelperFunctions.saveUserEmailSharedPreference(user.email);
-      await HelperFunctions.saveUserNameSharedPreference(user.displayName);
-    }
-    print('uid: ${user.displayName}');
-    print('uid: ${user.email}');
-  } catch (e) {
-    // TODO: Show alert here
-    print(e);
   }
 }
