@@ -67,18 +67,21 @@ class _HomeScreenState extends State<HomeScreen> {
           if (snapshot.data['groups'] != null) {
             // print(snapshot.data['groups'].length);
             if (snapshot.data['groups'].length != 0) {
-              return ListView.builder(
-                  itemCount: snapshot.data['groups'].length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    int reqIndex = snapshot.data['groups'].length - index - 1;
-                    return GroupTile(
-                        userName: snapshot.data['fullName'],
-                        groupId:
-                            _destructureId(snapshot.data['groups'][reqIndex]),
-                        groupName: _destructureName(
-                            snapshot.data['groups'][reqIndex]));
-                  });
+              return Column(children: [
+                ListView.builder(
+                    itemCount: snapshot.data['groups'].length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      int reqIndex = snapshot.data['groups'].length - index - 1;
+                      return Container(
+                          child: GroupTile(
+                              userName: snapshot.data['fullName'],
+                              groupId: _destructureId(
+                                  snapshot.data['groups'][reqIndex]),
+                              groupName: _destructureName(
+                                  snapshot.data['groups'][reqIndex])));
+                    })
+              ]);
             } else {
               return noGroupWidget();
             }
@@ -104,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     DBService(uid: _user.uid).getUserGroups().then(
       (snapshots) {
-        // print(snapshots);
         setState(() {
           _groups = snapshots;
         });
