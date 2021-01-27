@@ -140,6 +140,7 @@ class DBService {
         .doc(groupId)
         .collection('messages')
         .add(chatMessageData);
+
     FirebaseFirestore.instance.collection('groups').doc(groupId).update({
       'recentMessage': chatMessageData['message'],
       'recentMessageSender': chatMessageData['sender'],
@@ -160,7 +161,6 @@ class DBService {
       'recentMessageTime': chatAttachmentData['time'].toString(),
     });
   }
-
 
   // get Group Conversation
   getChats(String groupId) async {

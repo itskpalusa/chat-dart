@@ -13,13 +13,19 @@ class MessageTile extends StatefulWidget {
   final bool sentByMe;
   final String senderId;
   final String attachment;
+  final String groupId;
+  final String messageId;
+  final List likes;
 
   MessageTile(
       {this.message,
       this.sender,
       this.sentByMe,
       this.senderId,
-      this.attachment});
+      this.attachment,
+      this.groupId,
+      this.messageId,
+      this.likes});
 
   @override
   _MessageTileState createState() => _MessageTileState();
@@ -28,6 +34,7 @@ class MessageTile extends StatefulWidget {
 class _MessageTileState extends State<MessageTile> {
   final key = new GlobalKey<ScaffoldState>();
   String userProfilePicUrl;
+  User _user = FirebaseAuth.instance.currentUser;
 
   // initState
   @override
@@ -35,23 +42,33 @@ class _MessageTileState extends State<MessageTile> {
     super.initState();
   }
 
-  // functions
-  Future<String> getUserProfilePicUrl() async {
-    imageCache.clear();
-
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(widget.senderId)
-        .get()
-        .then((value) {
-      userProfilePicUrl = value.data()['profilePic'];
-    });
-
-    return userProfilePicUrl;
-  }
-
   @override
   Widget build(BuildContext context) {
+    Widget liked;
+    if (widget.likes == null) {
+      liked = SizedBox(width: 0);
+    } else {
+      liked = Row(children: [
+        Icon(Icons.favorite, color: Colors.pink),
+        Text(widget.likes.length.toString())
+      ]);
+    }
+
+    // functions
+    Future<String> getUserProfilePicUrl() async {
+      imageCache.clear();
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(widget.senderId)
+          .get()
+          .then((value) {
+        userProfilePicUrl = value.data()['profilePic'];
+      });
+
+      return userProfilePicUrl;
+    }
+
     String url = widget.attachment;
     Widget attachment;
     if (url != null)
@@ -97,6 +114,17 @@ class _MessageTileState extends State<MessageTile> {
             final snackBar = SnackBar(content: new Text("No image to expand"));
             Scaffold.of(con).showSnackBar(snackBar);
           }
+        },
+        onDoubleTap: () {
+          FirebaseFirestore.instance
+              .collection('groups')
+              .doc(widget.groupId)
+              .collection('messages')
+              .doc(widget.messageId)
+              .update({
+            'liked': FieldValue.arrayUnion([_user.uid])
+          });
+          print("$_user  liked message");
         },
         onLongPress: () {
           Clipboard.setData(
@@ -160,6 +188,10 @@ class _MessageTileState extends State<MessageTile> {
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.5)),
                     ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    liked
                   ],
                 ),
                 SizedBox(height: 7.0),

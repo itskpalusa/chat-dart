@@ -140,8 +140,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       sender: snapshot.data.documents[index].data()["sender"],
                       sentByMe: _user.uid ==
                           snapshot.data.documents[index].data()["senderId"],
+                      groupId: widget.groupId,
+                      messageId: snapshot.data.documents[index].documentID,
                       senderId:
                           snapshot.data.documents[index].data()["senderId"],
+                      likes:
+                          snapshot.data.documents[index].data()['liked'],
                       attachment: (snapshot.data.documents[index]
                                   .data()["attachment"] !=
                               null)
@@ -155,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  _sendMessage() {
+  _sendMessage() async {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
         "message": messageEditingController.text,
