@@ -45,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  // For Attachment(IMages)
+  // For Attachment(Images)
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   String imageUrl;
@@ -129,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, snapshot) {
         return snapshot.hasData
             ? Padding(
-                padding: EdgeInsets.only(bottom: Platform.isIOS ? 40 : 80),
+                padding: EdgeInsets.only(bottom: Platform.isIOS ? 70 : 80),
                 child: ListView.builder(
                   reverse: true,
                   itemCount: snapshot.data.documents.length,
@@ -244,7 +244,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text(widget.groupName),
         centerTitle: true,
@@ -301,7 +302,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: RotatedBox(
                         quarterTurns: 0,
-                        child: Icon(Icons.image),
+                        child: Icon(
+                          Icons.image,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     SizedBox(width: 12.0),
