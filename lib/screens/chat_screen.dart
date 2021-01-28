@@ -144,8 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       messageId: snapshot.data.documents[index].documentID,
                       senderId:
                           snapshot.data.documents[index].data()["senderId"],
-                      likes:
-                          snapshot.data.documents[index].data()['liked'],
+                      likes: snapshot.data.documents[index].data()['liked'],
                       attachment: (snapshot.data.documents[index]
                                   .data()["attachment"] !=
                               null)
@@ -274,67 +273,77 @@ class _ChatScreenState extends State<ChatScreen> {
           )
         ],
       ),
-      body: Container(
-        child: Stack(
-          children: <Widget>[
-            _chatMessages(),
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                color: Colors.grey[700],
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        controller: messageEditingController,
-                        keyboardType: TextInputType.multiline,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                            hintText: "Send a message ...",
-                            hintStyle: TextStyle(
-                              color: Colors.white38,
-                              fontSize: 16,
-                            ),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    SizedBox(width: 12.0),
-                    GestureDetector(
-                      onTap: () {
-                        uploadImageAttachment();
-                      },
-                      child: RotatedBox(
-                        quarterTurns: 0,
-                        child: Icon(
-                          Icons.image,
-                          color: Colors.white,
+      body: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Container(
+            child: Stack(
+              children: <Widget>[
+                _chatMessages(),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    color: Colors.grey[700],
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            controller: messageEditingController,
+                            maxLines: null,
+                            keyboardType: TextInputType.multiline,
+                            style: TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                                hintText: "Send a message ...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white38,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 12.0),
+                        GestureDetector(
+                          onTap: () {
+                            uploadImageAttachment();
+                          },
+                          child: RotatedBox(
+                            quarterTurns: 0,
+                            child: Icon(
+                              Icons.image,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12.0),
+                        GestureDetector(
+                          onTap: () {
+                            _sendMessage();
+                          },
+                          child: Container(
+                            height: 50.0,
+                            width: 50.0,
+                            decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Center(
+                                child: Icon(Icons.send, color: Colors.white)),
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(width: 12.0),
-                    GestureDetector(
-                      onTap: () {
-                        _sendMessage();
-                      },
-                      child: Container(
-                        height: 50.0,
-                        width: 50.0,
-                        decoration: BoxDecoration(
-                            color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Center(
-                            child: Icon(Icons.send, color: Colors.white)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }
