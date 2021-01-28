@@ -289,7 +289,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     Expanded(
                       child: TextField(
                         controller: messageEditingController,
-                        maxLines: null,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
