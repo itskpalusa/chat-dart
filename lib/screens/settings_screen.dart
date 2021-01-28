@@ -123,83 +123,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
         elevation: 0.0,
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 100.0),
-        child: Container(
-          child: ListView(
-            children: <Widget>[
-              display,
-              ElevatedButton(
-                onPressed: () {
-                  uploadImage();
+        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 50.0),
+        child: ListView(
+          children: <Widget>[
+            display,
+            ElevatedButton(
+              onPressed: () {
+                uploadImage();
+              },
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return Colors.blue;
+                  return null; // Use the component's default.
                 },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed))
-                      return Colors.blue;
-                    return null; // Use the component's default.
-                  },
-                )),
-                child: Text(
-                  'Change Profile Picture',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
+              )),
+              child: Text(
+                'Change Profile Picture',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
               ),
-              SizedBox(height: 15.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Full Name', style: TextStyle(fontSize: 17.0)),
-                  Text(widget.userName, style: TextStyle(fontSize: 17.0)),
-                ],
-              ),
-              Divider(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Email', style: TextStyle(fontSize: 17.0)),
-                  Text(widget.email, style: TextStyle(fontSize: 17.0)),
-                ],
-              ),
-              SizedBox(height: 15.0),
-              ElevatedButton(
-                onPressed: () => Wiredash.of(context).show(),
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.pressed))
-                      return Colors.blue;
-                    return null; // Use the component's default.
-                  },
-                )),
-                child: Text(
-                  'Give Feedback',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              ElevatedButton(
-                onPressed: () async {
-                  await _auth.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => AuthenticatePage()),
-                      (Route<dynamic> route) => false);
+            ),
+            SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Full Name', style: TextStyle(fontSize: 17.0)),
+                Text(widget.userName, style: TextStyle(fontSize: 17.0)),
+              ],
+            ),
+            Divider(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Email', style: TextStyle(fontSize: 17.0)),
+                Text(widget.email, style: TextStyle(fontSize: 17.0)),
+              ],
+            ),
+            SizedBox(height: 15.0),
+            ElevatedButton(
+              onPressed: () => Wiredash.of(context).show(),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed))
+                    return Colors.blue;
+                  return null; // Use the component's default.
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red, // background
-                  onPrimary: Colors.white, // foreground
-                ),
-                child: Text(
-                  'Logout',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
-                ),
+              )),
+              child: Text(
+                'Give Feedback',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 15.0),
+            ElevatedButton(
+              onPressed: () async {
+                await _auth.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => AuthenticatePage()),
+                    (Route<dynamic> route) => false);
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // background
+                onPrimary: Colors.white, // foreground
+              ),
+              child: Text(
+                'Logout',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
     );
