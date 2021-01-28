@@ -124,7 +124,6 @@ class _MessageTileState extends State<MessageTile> {
               .update({
             'liked': FieldValue.arrayUnion([_user.uid])
           });
-          print("$_user  liked message");
         },
         onLongPress: () {
           Clipboard.setData(
