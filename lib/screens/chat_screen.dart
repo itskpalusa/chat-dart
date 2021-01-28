@@ -189,7 +189,8 @@ class _ChatScreenState extends State<ChatScreen> {
     String timeSeconds = DateTime.now().millisecondsSinceEpoch.toString();
     var imageAttachmentName = groupName + groupId + timeSeconds;
     //Select Image
-    image = await _imagePicker.getImage(source: ImageSource.gallery);
+    image = await _imagePicker.getImage(
+        source: ImageSource.gallery, imageQuality: 75);
 
     var file = File(image.path);
 

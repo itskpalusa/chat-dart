@@ -57,7 +57,8 @@ class _ChatSettingsState extends State<ChatSettings> {
     User firebaseUser = FirebaseAuth.instance.currentUser;
     String groupId = widget.groupId;
     //Select Image
-    image = await _imagePicker.getImage(source: ImageSource.gallery);
+    image = await _imagePicker.getImage(source: ImageSource.gallery,
+        imageQuality: 75);
 
     var file = File(image.path);
 
