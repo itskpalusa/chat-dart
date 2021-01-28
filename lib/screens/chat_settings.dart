@@ -57,8 +57,8 @@ class _ChatSettingsState extends State<ChatSettings> {
     User firebaseUser = FirebaseAuth.instance.currentUser;
     String groupId = widget.groupId;
     //Select Image
-    image = await _imagePicker.getImage(source: ImageSource.gallery,
-        imageQuality: 75);
+    image = await _imagePicker.getImage(
+        source: ImageSource.gallery, imageQuality: 75);
 
     var file = File(image.path);
 
@@ -157,6 +157,7 @@ class _ChatSettingsState extends State<ChatSettings> {
             return Container(
               child: Column(
                 children: [
+                  SizedBox(height: 25),
                   InkWell(
                     onTap: () async {
                       await DBService(uid: _user.uid).togglingGroupJoin(
