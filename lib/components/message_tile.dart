@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat/screens/image_detail_screen.dart';
 import 'package:chat/screens/user_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -84,12 +85,20 @@ class _MessageTileState extends State<MessageTile> {
       future: getUserProfilePicUrl(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return new CircleAvatar(
-            backgroundImage: NetworkImage(
-              userProfilePicUrl,
+          return CachedNetworkImage(
+            imageUrl: userProfilePicUrl != null
+                ? userProfilePicUrl
+                : "https://dashstrap.com/static/media/image.06e2febd.png?__WB_REVISION__=06e2febd33a82f083544d2cf25d1eaa6",
+            height: 30,
+            width: 30,
+            placeholder: (BuildContext context, url) => CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 20,
             ),
-            onBackgroundImageError: null,
-            radius: 15,
+            imageBuilder: (BuildContext context, image) => CircleAvatar(
+              backgroundImage: image,
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.person),
           );
         } else if (snapshot.hasError) {
           return new Text("${snapshot.error}");
