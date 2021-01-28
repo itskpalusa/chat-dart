@@ -73,9 +73,10 @@ class _MessageTileState extends State<MessageTile> {
     String url = widget.attachment;
     Widget attachment;
     if (url != null)
-      attachment = Image.network(
-        url,
-        scale: 10,
+      attachment = CachedNetworkImage(
+        imageUrl: url != null
+            ? url
+            : 'https://dashstrap.com/static/media/image.06e2febd.png?__WB_REVISION__=06e2febd33a82f083544d2cf25d1eaa6',
       );
     else
       attachment = SizedBox(height: 0);
