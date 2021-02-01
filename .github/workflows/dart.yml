@@ -25,7 +25,6 @@ jobs:
         with:
           flutter-version: '1.22.4'
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build apk
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
