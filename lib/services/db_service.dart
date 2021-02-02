@@ -10,6 +10,8 @@ class DBService {
       FirebaseFirestore.instance.collection('users');
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection('groups');
+  final CollectionReference conversationCollection =
+      FirebaseFirestore.instance.collection('conversations');
 
   // Update UserData
   Future updateUserData(String fullName, String email) async {
@@ -17,6 +19,7 @@ class DBService {
       'fullName': fullName,
       'email': email,
       'groups': [],
+      'conversations': [],
       'profilePic': '',
       'timestamp': FieldValue.serverTimestamp(),
     });
@@ -204,5 +207,77 @@ class DBService {
     DocumentReference groupDocRef = groupCollection.doc(groupId);
 
     await groupDocRef.update({'private': privateStatus});
+  }
+
+// Create Single Conversation
+  Future createConversation(String user1Name, String user2Name, String user1ID,
+      String user2ID) async {
+    // Create Core Conversation in collections
+    DocumentReference convoDocRef = await conversationCollection.add({
+      'user1': user1ID + "_" + user1Name,
+      'user2': user2ID + "_" + user2Name,
+      'conversationID': '',
+      'recentMessage': '',
+      'recentMessageSender': ''
+    });
+
+    await convoDocRef.update({'conversationID': convoDocRef.id});
+
+    // For the user who initiated the conversation --> Create/Add conversation with ConvoID_otherUser'sName
+    DocumentReference user1DocRef = userCollection.doc(user1ID);
+    await user1DocRef.update({
+      'conversations': FieldValue.arrayUnion([convoDocRef.id + '_' + user2Name])
+    });
+
+    //Flipped process for the other user
+    DocumentReference user2DocRef = userCollection.doc(user2ID);
+    return await user2DocRef.update({
+      'conversations': FieldValue.arrayUnion([convoDocRef.id + '_' + user1Name])
+    });
+  }
+
+// Send a Message
+  sendMessageInConversation(String conversationId, chatMessageData) {
+    FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .add(chatMessageData);
+
+    FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .update({
+      'recentMessage': chatMessageData['message'],
+      'recentMessageSender': chatMessageData['sender'],
+      'recentMessageTime': chatMessageData['time'].toString(),
+    });
+  }
+
+// Send a Message
+  sendAttachmentInConversation(String conversationId, chatAttachmentData) {
+    FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .add(chatAttachmentData);
+    FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .update({
+      'recentMessage': chatAttachmentData['message'],
+      'recentMessageSender': chatAttachmentData['sender'],
+      'recentMessageTime': chatAttachmentData['time'].toString(),
+    });
+  }
+
+// get Group Conversation
+  getConversationChats(String conversationId) async {
+    return FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
   }
 }
