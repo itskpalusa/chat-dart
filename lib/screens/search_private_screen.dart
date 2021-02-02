@@ -6,6 +6,7 @@ import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/chat_screen.dart';
 import 'package:chat/services/db_service.dart';
 
+import '../constants.dart';
 
 class SearchPrivateScreen extends StatefulWidget {
   @override
@@ -59,7 +60,7 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
 
   void _showScaffold(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: kPortGoreBackground,
       duration: Duration(milliseconds: 1500),
       content: Text(message,
           textAlign: TextAlign.center, style: TextStyle(fontSize: 17.0)),
@@ -79,16 +80,16 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
   Widget groupList() {
     return hasUserSearched
         ? ListView.builder(
-        shrinkWrap: true,
-        itemCount: searchResultSnapshot.docs.length,
-        itemBuilder: (context, index) {
-          return groupTile(
-            _userName,
-            searchResultSnapshot.docs[index].data()["groupId"],
-            searchResultSnapshot.docs[index].data()["groupName"],
-            searchResultSnapshot.docs[index].data()["admin"],
-          );
-        })
+            shrinkWrap: true,
+            itemCount: searchResultSnapshot.docs.length,
+            itemBuilder: (context, index) {
+              return groupTile(
+                _userName,
+                searchResultSnapshot.docs[index].data()["groupId"],
+                searchResultSnapshot.docs[index].data()["groupName"],
+                searchResultSnapshot.docs[index].data()["admin"],
+              );
+            })
         : Container();
   }
 
@@ -130,21 +131,21 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
         },
         child: _isJoined
             ? Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.black87,
-              border: Border.all(color: Colors.white, width: 1.0)),
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          child: Text('Joined', style: TextStyle(color: Colors.white)),
-        )
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.black87,
+                    border: Border.all(color: Colors.white, width: 1.0)),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Text('Joined', style: TextStyle(color: Colors.white)),
+              )
             : Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.blueAccent,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          child: Text('Join', style: TextStyle(color: Colors.white)),
-        ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.blueAccent,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Text('Join', style: TextStyle(color: Colors.white)),
+              ),
       ),
     );
   }
@@ -156,62 +157,62 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
       key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.0,
+        backgroundColor: kPortGoreBackground,
         title: Text('Join Private Group',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ),
       body: isLoading
           ? Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      )
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
           : Container(
-        child: Column(
-          children: [
-            Container(
-              padding:
-              EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-              color: Colors.grey[700],
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchEditingController,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                          hintText: "Enter Private Key",
-                          hintStyle: TextStyle(
-                            color: Colors.white38,
-                            fontSize: 16,
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    color: Colors.grey[700],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchEditingController,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                                hintText: "Enter Private Key",
+                                hintStyle: TextStyle(
+                                  color: Colors.white38,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
                           ),
-                          border: InputBorder.none),
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _initiateSearch();
+                            },
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: kSteelBlue,
+                                    borderRadius: BorderRadius.circular(40)),
+                                child:
+                                    Icon(Icons.forward, color: Colors.white)))
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        _initiateSearch();
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Icon(Icons.forward, color: Colors.white)))
+                  isLoading
+                      ? Container(
+                          child: Center(child: CircularProgressIndicator()))
+                      : groupList()
                 ],
               ),
             ),
-            isLoading
-                ? Container(
-                child: Center(child: CircularProgressIndicator()))
-                : groupList()
-          ],
-        ),
-      ),
     );
   }
 }

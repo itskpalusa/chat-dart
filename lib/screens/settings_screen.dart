@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -119,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 27.0,
-                fontWeight: FontWeight.bold)),
+                fontWeight: FontWeight.bold)),backgroundColor: kPortGoreBackground,
         elevation: 0.0,
       ),
       body: Container(
@@ -135,8 +136,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed))
-                    return Colors.blue;
-                  return null; // Use the component's default.
+                    return kSteelBlue;
+                  return kSteelBlue; // Use the component's default.
                 },
               )),
               child: Text(
@@ -168,8 +169,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed))
-                    return Colors.blue;
-                  return null; // Use the component's default.
+                    return kSteelBlue;
+                  return kSteelBlue; // Use the component's default.
                 },
               )),
               child: Text(

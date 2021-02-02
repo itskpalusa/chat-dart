@@ -1,3 +1,4 @@
+import 'package:chat/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -159,7 +160,7 @@ class _SearchScreenState extends State<SearchScreen> {
             style: TextStyle(
                 fontSize: 27.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.white)),
+                color: Colors.white)),backgroundColor: kPortGoreBackground,
       ),
       body: isLoading
           ? Container(
@@ -199,7 +200,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 height: 40,
                                 width: 40,
                                 decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
+                                    color: kSteelBlue,
                                     borderRadius: BorderRadius.circular(40)),
                                 child: Icon(Icons.search, color: Colors.white)))
                       ],

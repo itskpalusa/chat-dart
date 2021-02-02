@@ -7,6 +7,7 @@ import 'package:chat/screens/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../constants.dart';
 import 'home_screen.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';

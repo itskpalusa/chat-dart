@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/message_tile.dart';
 import 'dart:io';
-import 'dart:math' as math;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import '../constants.dart';
 
 Future<void> saveTokenToDatabase(String token) async {
   // Assume user is logged in for this example
@@ -252,6 +253,7 @@ class _ChatScreenState extends State<ChatScreen> {
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text(widget.groupName),
+        backgroundColor: kPortGoreBackground,
         centerTitle: true,
         elevation: 0.0,
         actions: <Widget>[
@@ -332,7 +334,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             height: 50.0,
                             width: 50.0,
                             decoration: BoxDecoration(
-                                color: Colors.blueAccent,
+                                color: kSteelBlue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: Center(
                                 child: Icon(Icons.send, color: Colors.white)),

@@ -9,6 +9,8 @@ import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
 
+import '../constants.dart';
+
 class ConversationHomeScreen extends StatefulWidget {
   @override
   _ConversationHomeScreenState createState() => _ConversationHomeScreenState();
@@ -212,8 +214,11 @@ class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Conversations',
-            style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.bold)),
+        title: Text(
+          'Conversations',
+          style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: kPortGoreBackground,
         elevation: 0.0,
       ),
       body: groupsList(),

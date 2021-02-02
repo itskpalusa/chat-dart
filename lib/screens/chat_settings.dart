@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../constants.dart';
+
 class ChatSettings extends StatefulWidget {
   final String groupId;
   final String groupName;
@@ -141,7 +143,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                         : Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.blueAccent,
+                              color: kSteelBlue
                             ),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 10.0),
@@ -256,7 +258,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                   height: 20,
                   width: 150,
                   child: Divider(
-                    color: Colors.teal.shade100,
+                    color: kPortGoreBackground,
                   ),
                 ),
                 Container(
@@ -275,7 +277,7 @@ class _ChatSettingsState extends State<ChatSettings> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.lightBlue,
+                            color: kSteelBlue,
                           ),
                           padding: EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 10.0),
@@ -350,6 +352,7 @@ class _ChatSettingsState extends State<ChatSettings> {
     final groupNameFromWidget = widget.groupName;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPortGoreBackground,
         title: Text("$groupNameFromWidget Settings"),
         centerTitle: true,
         elevation: 0.0,

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/services/db_service.dart';
 
+import '../constants.dart';
+
 class UserProfileScreen extends StatefulWidget {
   final String userName;
   final String userId;
@@ -99,7 +101,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue, // background
+                    primary: kSteelBlue, // background
                     onPrimary: Colors.white, // foreground
                   ),
                   child: Text(

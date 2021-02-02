@@ -10,6 +10,8 @@ import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/components/group_tile.dart';
 
+import '../constants.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -216,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPortGoreBackground,
         title: Text('Groups',
             style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.bold)),
         elevation: 0.0,

@@ -10,6 +10,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+import '../constants.dart';
+
 Future<void> saveTokenToDatabase(String token) async {
   // Assume user is logged in for this example
   String userId = FirebaseAuth.instance.currentUser.uid;
@@ -189,6 +191,7 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text(widget.otherUserName),
+        backgroundColor: kPortGoreBackground,
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -250,7 +253,7 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
                             height: 50.0,
                             width: 50.0,
                             decoration: BoxDecoration(
-                                color: Colors.blueAccent,
+                                color: kSteelBlue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: Center(
                                 child: Icon(Icons.send, color: Colors.white)),
