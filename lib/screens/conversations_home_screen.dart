@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:chat/components/conversation_tile.dart';
-import 'package:chat/screens/search_private_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,7 +19,6 @@ class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
   final AuthService _auth = AuthService();
   User _user;
   String _groupName;
-  String _groupKey;
   String _userName = '';
   String _email = '';
   Stream _conversations;

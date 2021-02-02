@@ -3,10 +3,8 @@ import 'package:chat/screens/image_detail_screen.dart';
 import 'package:chat/screens/user_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ConversationMessageTile extends StatefulWidget {
   final String message;

@@ -3,7 +3,6 @@ import 'package:chat/screens/conversation_chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:chat/screens/chat_screen.dart';
 
 class ConversationTile extends StatelessWidget {
   final String userName;
@@ -21,7 +20,7 @@ class ConversationTile extends StatelessWidget {
   }
 
   Future<String> getOtherUserProfilePic() async {
-    _user = await FirebaseAuth.instance.currentUser;
+    _user = FirebaseAuth.instance.currentUser;
 
     await FirebaseFirestore.instance
         .collection("conversations")

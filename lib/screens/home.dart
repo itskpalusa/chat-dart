@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/conversation_chat_screen.dart';
 import 'package:chat/screens/conversations_home_screen.dart';
-import 'package:chat/screens/push_screen.dart';
 import 'package:chat/screens/search_screen.dart';
 import 'package:chat/screens/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
