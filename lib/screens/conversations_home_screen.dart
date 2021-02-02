@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
-import 'package:chat/components/group_tile.dart';
 
 class ConversationHomeScreen extends StatefulWidget {
   @override
@@ -46,15 +45,9 @@ class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          GestureDetector(
-              onTap: () {
-                _popupDialog(context);
-              },
-              child:
-                  Icon(Icons.add_circle, color: Colors.grey[700], size: 75.0)),
           SizedBox(height: 20.0),
           Text(
-              "You've not joined any group, tap on the 'add' icon to create a group or search for groups by tapping on the search button below."),
+              "You've not joined any group, go join a group, and then find someone you'd like to talk to!"),
         ],
       ),
     );
@@ -224,25 +217,6 @@ class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
         title: Text('Conversations',
             style: TextStyle(fontSize: 27.0, fontWeight: FontWeight.bold)),
         elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon: Icon(Icons.create, size: 25.0),
-            onPressed: () {
-              _popupDialog(context);
-            },
-          ),
-          IconButton(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon: Icon(Icons.add, size: 25.0),
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (context) => SearchPrivateScreen()),
-                  (Route<dynamic> route) => true);
-            },
-          ),
-        ],
       ),
       body: groupsList(),
     );
