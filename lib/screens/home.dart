@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:chat/helper/helper_functions.dart';
+import 'package:chat/screens/conversation_chat_screen.dart';
+import 'package:chat/screens/conversations_home_screen.dart';
 import 'package:chat/screens/push_screen.dart';
 import 'package:chat/screens/search_screen.dart';
 import 'package:chat/screens/settings_screen.dart';
@@ -19,9 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
-  FirebaseAnalyticsObserver(analytics: analytics);
-
-
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   final AuthService _auth = AuthService();
   User _user;
@@ -75,9 +75,15 @@ class _HomeState extends State<Home> {
             items: [
               new BottomNavigationBarItem(
                 icon: Platform.isIOS
-                    ? Icon(CupertinoIcons.home)
-                    : Icon(Icons.home),
-                label: 'Home',
+                    ? Icon(CupertinoIcons.group)
+                    : Icon(Icons.group),
+                label: 'Groups',
+              ),
+              new BottomNavigationBarItem(
+                icon: Platform.isIOS
+                    ? Icon(CupertinoIcons.person_fill)
+                    : Icon(Icons.person),
+                label: 'Conversations',
               ),
               new BottomNavigationBarItem(
                 icon: Platform.isIOS
@@ -85,7 +91,6 @@ class _HomeState extends State<Home> {
                     : Icon(Icons.search),
                 label: 'Search',
               ),
-
               new BottomNavigationBarItem(
                   icon: Platform.isIOS
                       ? Icon(CupertinoIcons.settings)
@@ -99,9 +104,12 @@ class _HomeState extends State<Home> {
                 return HomeScreen();
                 break;
               case 1:
-                return SearchScreen();
+                return ConversationHomeScreen();
                 break;
               case 2:
+                return SearchScreen();
+                break;
+              case 3:
                 return SettingsScreen(userName: _userName, email: _email);
                 break;
               default:
