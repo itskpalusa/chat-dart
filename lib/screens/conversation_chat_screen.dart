@@ -162,8 +162,8 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
         .doc(conversationId)
         .update(<String, dynamic>{'profilePic': imageUrl});
 
-    DBService()
-        .sendAttachment(widget.conversationId, chatAndAttachmentMessageMap);
+    DBService().sendAttachmentInConversation(
+        widget.conversationId, chatAndAttachmentMessageMap);
     setState(() {
       messageEditingController.text = "";
       _scrollController.jumpTo(_scrollController.position.minScrollExtent);
