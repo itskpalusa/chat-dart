@@ -120,7 +120,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 27.0,
-                fontWeight: FontWeight.bold)),backgroundColor: kPortGoreBackground,
+                fontWeight: FontWeight.bold)),
+        backgroundColor: kPortGoreBackground,
         elevation: 0.0,
       ),
       body: Container(
@@ -135,8 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed))
-                    return kSteelBlue;
+                  if (states.contains(MaterialState.pressed)) return kSteelBlue;
                   return kSteelBlue; // Use the component's default.
                 },
               )),
@@ -168,8 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed))
-                    return kSteelBlue;
+                  if (states.contains(MaterialState.pressed)) return kSteelBlue;
                   return kSteelBlue; // Use the component's default.
                 },
               )),
@@ -197,6 +196,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
+            Text(
+              "Made with ❤️ in Fort Collins, CO",
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              "Version 1.1.0",
+              textAlign: TextAlign.center,
+            )
           ],
         ),
       ),
