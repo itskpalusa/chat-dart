@@ -66,6 +66,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final List<Widget> _children = [
       HomeScreen(),
+      ConversationHomeScreen(),
       SearchScreen(),
       SettingsScreen(userName: _userName, email: _email),
     ];
@@ -125,9 +126,14 @@ class _HomeState extends State<Home> {
           currentIndex: _currentIndex, // new
           items: [
             new BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.group),
               backgroundColor: Colors.black,
-              label: 'Home',
+              label: 'Groups',
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              backgroundColor: Colors.black,
+              label: 'Conversations',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.search),
