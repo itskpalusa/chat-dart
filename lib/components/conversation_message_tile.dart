@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class ConversationMessageTile extends StatefulWidget {
   final String message;
@@ -15,6 +16,8 @@ class ConversationMessageTile extends StatefulWidget {
   final String conversationId;
   final String messageId;
   final List likes;
+  final int messageTime;
+  final Timestamp timestamp;
 
   ConversationMessageTile(
       {this.message,
@@ -24,7 +27,9 @@ class ConversationMessageTile extends StatefulWidget {
       this.attachment,
       this.conversationId,
       this.messageId,
-      this.likes});
+      this.likes,
+      this.messageTime,
+      this.timestamp});
 
   @override
   _ConversationMessageTileState createState() =>
@@ -46,7 +51,7 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
   Widget build(BuildContext context) {
     Widget liked;
     if (widget.likes == null) {
-      liked = SizedBox(width: 0);
+      liked = Icon(Icons.favorite_outline, color: Colors.white);
     } else {
       liked = Row(children: [
         Icon(Icons.favorite, color: Colors.pink),
@@ -107,6 +112,25 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
         return new CircularProgressIndicator();
       },
     );
+
+    //Time Parsing
+    var messageSentTime;
+    var messageTimeParsed =
+        DateTime.fromMillisecondsSinceEpoch(widget.messageTime, isUtc: true);
+    var today = DateTime.now();
+    if (today.isAfter(messageTimeParsed) &&
+        (messageTimeParsed.day != today.day ||
+            today.difference(messageTimeParsed).inHours > 24)) {
+      final DateFormat formatter = DateFormat('MM/dd hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      messageSentTime = formatted;
+    } else {
+      final DateFormat formatter = DateFormat('hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      messageSentTime = formatted;
+    }
 
     return GestureDetector(
         onTap: () {
@@ -172,10 +196,11 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     widget.sentByMe ? SizedBox(height: 0) : profilePicture,
                     SizedBox(
-                      width: 8,
+                      width: 2,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -196,18 +221,25 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.5)),
                     ),
-                    SizedBox(
-                      width: 8,
+                    Spacer(),
+                    Text(
+                      messageSentTime,
+                      style: TextStyle(color: Colors.black45),
                     ),
-                    liked
                   ],
                 ),
                 SizedBox(height: 7.0),
                 attachment,
-                Text(
-                  widget.message,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 15.0, color: Colors.white),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.message,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+                    liked,
+                  ],
                 ),
               ],
             ),

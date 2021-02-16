@@ -77,6 +77,10 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
                   itemBuilder: (context, index) {
                     return ConversationMessageTile(
                       message: snapshot.data.documents[index].data()["message"],
+                      messageTime:
+                          snapshot.data.documents[index].data()["time"],
+                      timestamp:
+                          snapshot.data.documents[index].data()['timestamp'],
                       sender: snapshot.data.documents[index].data()["sender"],
                       sentByMe: _user.uid ==
                           snapshot.data.documents[index].data()["senderId"],
