@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:linkable/linkable.dart';
 
 class MessageTile extends StatefulWidget {
   final String message;
@@ -58,6 +60,19 @@ class _MessageTileState extends State<MessageTile> {
       ]);
     }
 
+    // Parse if link is present
+    if (widget.message.contains("https")) {
+      String messageWURL = widget.message;
+
+      const start = "http";
+      const end = " ";
+
+      final startIndex = messageWURL.indexOf(start);
+      final endIndex = messageWURL.indexOf(end, startIndex + start.length);
+
+      print(messageWURL.substring(startIndex + start.length, endIndex));
+    }
+
     // functions
     Future<String> getUserProfilePicUrl() async {
       imageCache.clear();
@@ -73,12 +88,12 @@ class _MessageTileState extends State<MessageTile> {
       return userProfilePicUrl;
     }
 
-    String url = widget.attachment;
+    String urlForImage = widget.attachment;
     Widget attachment;
-    if (url != null)
+    if (urlForImage != null)
       attachment = CachedNetworkImage(
-        imageUrl: url != null
-            ? url
+        imageUrl: urlForImage != null
+            ? urlForImage
             : 'https://dashstrap.com/static/media/image.06e2febd.png?__WB_REVISION__=06e2febd33a82f083544d2cf25d1eaa6',
       );
     else
@@ -133,11 +148,11 @@ class _MessageTileState extends State<MessageTile> {
 
     return GestureDetector(
         onTap: () {
-          if (url != null) {
+          if (urlForImage != null) {
             Navigator.push(context, MaterialPageRoute(
               builder: (_) {
                 return ImageDetailScreen(
-                  image: url,
+                  image: urlForImage,
                 );
               },
             ));
@@ -233,8 +248,9 @@ class _MessageTileState extends State<MessageTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Text(
+                      child: Linkable(text:
                         widget.message,
+                        linkColor: Colors.white,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 15.0, color: Colors.white),
                       ),
