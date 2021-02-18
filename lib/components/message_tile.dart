@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat/constants.dart';
 import 'package:chat/screens/image_detail_screen.dart';
 import 'package:chat/screens/user_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:linkable/linkable.dart';
 
 class MessageTile extends StatefulWidget {
@@ -46,6 +46,32 @@ class _MessageTileState extends State<MessageTile> {
   @override
   void initState() {
     super.initState();
+
+    getTimeStamp().then((data) {
+      setState(() {
+        this.messageSentTime = data;
+      });
+    });
+  }
+
+  var messageSentTime;
+
+  Future getTimeStamp() async {
+    //Time Parsing
+    var messageTimeParsed =
+        DateTime.fromMillisecondsSinceEpoch(widget.messageTime, isUtc: true);
+    var today = DateTime.now();
+    if (today.difference(messageTimeParsed).inHours > 24) {
+      final DateFormat formatter = DateFormat('MM/dd hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      return messageSentTime = formatted;
+    } else {
+      final DateFormat formatter = DateFormat('hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      return messageSentTime = formatted;
+    }
   }
 
   @override
@@ -58,19 +84,6 @@ class _MessageTileState extends State<MessageTile> {
         Icon(Icons.favorite, color: Colors.pink),
         Text(widget.likes.length.toString())
       ]);
-    }
-
-    // Parse if link is present
-    if (widget.message.contains("https")) {
-      String messageWURL = widget.message;
-
-      const start = "http";
-      const end = " ";
-
-      final startIndex = messageWURL.indexOf(start);
-      final endIndex = messageWURL.indexOf(end, startIndex + start.length);
-
-      print(messageWURL.substring(startIndex + start.length, endIndex));
     }
 
     // functions
@@ -126,25 +139,6 @@ class _MessageTileState extends State<MessageTile> {
         return new CircularProgressIndicator();
       },
     );
-
-    //Time Parsing
-    var messageSentTime;
-    var messageTimeParsed =
-        DateTime.fromMillisecondsSinceEpoch(widget.messageTime, isUtc: true);
-    var today = DateTime.now();
-    if (today.isAfter(messageTimeParsed) &&
-        (messageTimeParsed.day != today.day ||
-            today.difference(messageTimeParsed).inHours > 24)) {
-      final DateFormat formatter = DateFormat('MM/dd hh:mm a');
-      final String formatted =
-          formatter.format(widget.timestamp.toDate().toLocal());
-      messageSentTime = formatted;
-    } else {
-      final DateFormat formatter = DateFormat('hh:mm a');
-      final String formatted =
-          formatter.format(widget.timestamp.toDate().toLocal());
-      messageSentTime = formatted;
-    }
 
     return GestureDetector(
         onTap: () {
@@ -237,7 +231,7 @@ class _MessageTileState extends State<MessageTile> {
                     ),
                     Spacer(),
                     Text(
-                      messageSentTime,
+                      messageSentTime ?? " ",
                       style: TextStyle(color: Colors.black45),
                     ),
                   ],
@@ -248,9 +242,12 @@ class _MessageTileState extends State<MessageTile> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Linkable(text:
-                        widget.message,
-                        linkColor: Colors.white,
+                      child: Linkable(
+                        text: widget.message,
+                        textColor: Colors.white,
+                        linkColor: widget.senderId == _user.uid
+                            ? Colors.white
+                            : kPortGoreBackground,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 15.0, color: Colors.white),
                       ),

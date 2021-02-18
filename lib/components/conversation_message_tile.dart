@@ -6,6 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:linkable/linkable.dart';
+
+import '../constants.dart';
 
 class ConversationMessageTile extends StatefulWidget {
   final String message;
@@ -45,6 +48,32 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
   @override
   void initState() {
     super.initState();
+
+    getTimeStamp().then((data) {
+      setState(() {
+        this.messageSentTime = data;
+      });
+    });
+  }
+
+  var messageSentTime;
+
+  Future getTimeStamp() async {
+    //Time Parsing
+    var messageTimeParsed =
+        DateTime.fromMillisecondsSinceEpoch(widget.messageTime, isUtc: true);
+    var today = DateTime.now();
+    if (today.difference(messageTimeParsed).inHours > 24) {
+      final DateFormat formatter = DateFormat('MM/dd hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      return messageSentTime = formatted;
+    } else {
+      final DateFormat formatter = DateFormat('hh:mm a');
+      final String formatted =
+          formatter.format(widget.timestamp.toDate().toLocal());
+      return messageSentTime = formatted;
+    }
   }
 
   @override
@@ -112,25 +141,6 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
         return new CircularProgressIndicator();
       },
     );
-
-    //Time Parsing
-    var messageSentTime;
-    var messageTimeParsed =
-        DateTime.fromMillisecondsSinceEpoch(widget.messageTime, isUtc: true);
-    var today = DateTime.now();
-    if (today.isAfter(messageTimeParsed) &&
-        (messageTimeParsed.day != today.day ||
-            today.difference(messageTimeParsed).inHours > 24)) {
-      final DateFormat formatter = DateFormat('MM/dd hh:mm a');
-      final String formatted =
-          formatter.format(widget.timestamp.toDate().toLocal());
-      messageSentTime = formatted;
-    } else {
-      final DateFormat formatter = DateFormat('hh:mm a');
-      final String formatted =
-          formatter.format(widget.timestamp.toDate().toLocal());
-      messageSentTime = formatted;
-    }
 
     return GestureDetector(
         onTap: () {
@@ -223,7 +233,7 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
                     ),
                     Spacer(),
                     Text(
-                      messageSentTime,
+                      messageSentTime ?? " ",
                       style: TextStyle(color: Colors.black45),
                     ),
                   ],
@@ -233,10 +243,16 @@ class _ConversationMessageTileState extends State<ConversationMessageTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.message,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    Flexible(
+                      child: Linkable(
+                        text: widget.message,
+                        textColor: Colors.white,
+                        linkColor: widget.senderId == _user.uid
+                            ? Colors.white
+                            : kPortGoreBackground,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 15.0, color: Colors.white),
+                      ),
                     ),
                     liked,
                   ],
