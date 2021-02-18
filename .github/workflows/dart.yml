@@ -8,10 +8,14 @@ on:
 
 jobs:
   build:
-    # This job will run on mac virtual machine and linux-ubuntu virtual machine
-    runs-on: [macOS-latest] [ubuntu-latest]
+    # Cross platform testing matrix 
+      strategy:
+        matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
 
-    steps:
+      runs-on: ${{ matrix.os }}
+    
+      steps:
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
 
