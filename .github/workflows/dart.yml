@@ -27,14 +27,3 @@ jobs:
 
       # Get flutter dependencies.
       - run: flutter pub get
-
-      # Build ios.
-      # - run: flutter build ios --bundle-sksl-path flutter_01.sksl.json
-      # Build android appbundle
-      - run: flutter build appbundle --bundle-sksl-path flutter_01.sksl.json
-
-      # Upload generated apk to the artifacts.
-      - uses: actions/upload-artifact@v1
-        with:
-          name: release-apk
-          path: build/app/outputs/apk/release/app-release.apk
