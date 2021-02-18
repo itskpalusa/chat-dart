@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    # This job will run on mac virtual machine
-    runs-on: macOS-latest
+    # This job will run on mac virtual machine and linux-ubuntu virtual machine
+    runs-on: [macOS-latest] [ubuntu-latest]
 
     steps:
       # Setup Java environment in order to build the Android app.
@@ -27,3 +27,11 @@ jobs:
 
       # Get flutter dependencies.
       - run: flutter pub get
+
+      # Check for any formatting issues in the code.
+      - run: flutter format lib/** --set-exit-if-changed
+
+      # Statically analyze the Dart code for any errors.
+      - run: flutter analyze --no-pub
+
+
