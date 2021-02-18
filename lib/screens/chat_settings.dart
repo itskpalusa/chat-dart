@@ -145,9 +145,8 @@ class _ChatSettingsState extends State<ChatSettings> {
                           )
                         : Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: kSteelBlue
-                            ),
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: kSteelBlue),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 10.0),
                             child: Text('Make Public',

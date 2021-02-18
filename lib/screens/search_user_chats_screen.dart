@@ -76,16 +76,16 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget groupList() {
     return hasUserSearched
         ? ListView.builder(
-        shrinkWrap: true,
-        itemCount: searchResultSnapshot.docs.length,
-        itemBuilder: (context, index) {
-          return groupTile(
-            _userName,
-            searchResultSnapshot.docs[index].data()["groupId"],
-            searchResultSnapshot.docs[index].data()["groupName"],
-            searchResultSnapshot.docs[index].data()["admin"],
-          );
-        })
+            shrinkWrap: true,
+            itemCount: searchResultSnapshot.docs.length,
+            itemBuilder: (context, index) {
+              return groupTile(
+                _userName,
+                searchResultSnapshot.docs[index].data()["groupId"],
+                searchResultSnapshot.docs[index].data()["groupName"],
+                searchResultSnapshot.docs[index].data()["admin"],
+              );
+            })
         : Container();
   }
 
@@ -127,21 +127,21 @@ class _SearchScreenState extends State<SearchScreen> {
         },
         child: _isJoined
             ? Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.black87,
-              border: Border.all(color: Colors.white, width: 1.0)),
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          child: Text('Joined', style: TextStyle(color: Colors.white)),
-        )
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.black87,
+                    border: Border.all(color: Colors.white, width: 1.0)),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Text('Joined', style: TextStyle(color: Colors.white)),
+              )
             : Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.blueAccent,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          child: Text('Join', style: TextStyle(color: Colors.white)),
-        ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.blueAccent,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Text('Join', style: TextStyle(color: Colors.white)),
+              ),
       ),
     );
   }
@@ -161,55 +161,55 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: isLoading
           ? Container(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      )
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
           : Container(
-        child: Column(
-          children: [
-            Container(
-              padding:
-              EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-              color: Colors.grey[500],
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchEditingController,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                          hintText: "Search groups...",
-                          hintStyle: TextStyle(
-                            color: Colors.white38,
-                            fontSize: 16,
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                    color: Colors.grey[500],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: searchEditingController,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                                hintText: "Search groups...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white38,
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
                           ),
-                          border: InputBorder.none),
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              _initiateSearch();
+                            },
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
+                                    borderRadius: BorderRadius.circular(40)),
+                                child: Icon(Icons.search, color: Colors.white)))
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        _initiateSearch();
-                      },
-                      child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(40)),
-                          child: Icon(Icons.search, color: Colors.white)))
+                  isLoading
+                      ? Container(
+                          child: Center(child: CircularProgressIndicator()))
+                      : groupList()
                 ],
               ),
             ),
-            isLoading
-                ? Container(
-                child: Center(child: CircularProgressIndicator()))
-                : groupList()
-          ],
-        ),
-      ),
     );
   }
 }

@@ -161,7 +161,8 @@ class _SearchScreenState extends State<SearchScreen> {
             style: TextStyle(
                 fontSize: 27.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.white)),backgroundColor: kPortGoreBackground,
+                color: Colors.white)),
+        backgroundColor: kPortGoreBackground,
       ),
       body: isLoading
           ? Container(

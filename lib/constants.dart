@@ -40,6 +40,5 @@ const ktextInputDecoration = InputDecoration(
       borderSide: BorderSide(color: Color(0xFFFF0889B6), width: 2.0)),
 );
 
-
-const kSteelBlue= Color(0xFFFF4b97bf);
-const kPortGoreBackground= Color(0xFFFF22284a);
+const kSteelBlue = Color(0xFFFF4b97bf);
+const kPortGoreBackground = Color(0xFFFF22284a);
