@@ -1,13 +1,11 @@
 import 'dart:io';
 import 'package:chat/helper/helper_functions.dart';
-import 'package:chat/screens/conversation_chat_screen.dart';
 import 'package:chat/screens/conversations_home_screen.dart';
 import 'package:chat/screens/search_screen.dart';
 import 'package:chat/screens/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../constants.dart';
 import 'home_screen.dart';
 import 'package:chat/services/auth_services.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -20,10 +18,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
+  // ignore: unused_field
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
+  // ignore: unused_field
   final AuthService _auth = AuthService();
+  // ignore: unused_field
   User _user;
   String _userName = '';
   String _email = '';
@@ -38,6 +39,7 @@ class _HomeState extends State<Home> {
 
   // functions
   _getUserAuth() async {
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       setState(() {

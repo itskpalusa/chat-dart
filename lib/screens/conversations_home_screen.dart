@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:chat/components/conversation_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -19,10 +18,12 @@ class ConversationHomeScreen extends StatefulWidget {
 
 class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
   // data
+  // ignore: unused_field
   final AuthService _auth = AuthService();
   User _user;
-  String _groupName;
+  // ignore: unused_field
   String _userName = '';
+  // ignore: unused_field
   String _email = '';
   Stream _conversations;
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -99,6 +100,7 @@ class _ConversationHomeScreenState extends State<ConversationHomeScreen> {
 
   // functions
   _getUserAuthAndJoinedGroups() async {
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
     await HelperFunctions.getUserNameSharedPreference().then(
       (value) {

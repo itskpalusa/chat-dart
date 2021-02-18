@@ -19,11 +19,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // data
+  // ignore: unused_field
   final AuthService _auth = AuthService();
   User _user;
   String _groupName;
-  String _groupKey;
+  // ignore: unused_field
   String _userName = '';
+  // ignore: unused_field
   String _email = '';
   Stream _groups;
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -99,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // functions
   _getUserAuthAndJoinedGroups() async {
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
     await HelperFunctions.getUserNameSharedPreference().then(
       (value) {

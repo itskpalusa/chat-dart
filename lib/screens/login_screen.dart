@@ -8,7 +8,6 @@ import 'package:chat/services/auth_services.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:chat/constants.dart';
 import 'package:chat/loading.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;

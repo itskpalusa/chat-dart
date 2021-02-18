@@ -44,6 +44,7 @@ class _ChatSettingsState extends State<ChatSettings> {
   }
 
   _getUserAuth() async {
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       setState(() {
@@ -56,6 +57,7 @@ class _ChatSettingsState extends State<ChatSettings> {
     final _firebaseStorage = FirebaseStorage.instance;
     final _imagePicker = ImagePicker();
     PickedFile image;
+    // ignore: unused_local_variable
     User firebaseUser = FirebaseAuth.instance.currentUser;
     String groupId = widget.groupId;
     //Select Image
@@ -69,6 +71,7 @@ class _ChatSettingsState extends State<ChatSettings> {
       var snapshot = await _firebaseStorage
           .ref()
           .child('groupIcons/$groupId')
+          // ignore: await_only_futures
           .putFile(await file);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {

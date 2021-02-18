@@ -1,5 +1,4 @@
 import 'package:chat/helper/helper_functions.dart';
-import 'package:chat/screens/conversation_chat_screen.dart';
 import 'package:chat/screens/conversations_home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +35,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       _userName = value;
     });
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
   }
 
@@ -96,6 +96,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         _userName, widget.userName, _user.uid, widget.userId);
                     Navigator.of(context).push(
                       MaterialPageRoute(
+                        // ignore: await_only_futures
                         builder: await (context) => ConversationHomeScreen(),
                       ),
                     );

@@ -127,6 +127,7 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
     final _firebaseStorage = FirebaseStorage.instance;
     final _imagePicker = ImagePicker();
     PickedFile image;
+    // ignore: unused_local_variable
     User firebaseUser = FirebaseAuth.instance.currentUser;
     String conversationId = widget.conversationId;
     String timeSeconds = DateTime.now().millisecondsSinceEpoch.toString();
@@ -142,6 +143,7 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
       var snapshot = await _firebaseStorage
           .ref()
           .child('attachments/$imageAttachmentName')
+          // ignore: await_only_futures
           .putFile(await file);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {

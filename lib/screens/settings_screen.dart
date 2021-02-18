@@ -46,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         .collection("users")
         .doc(firebaseUser.uid)
         .get()
+        // ignore: await_only_futures
         .then(await (value) {
           profilePicUrl = value.data()['profilePic'];
         });
@@ -68,6 +69,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       var snapshot = await _firebaseStorage
           .ref()
           .child('profilePictures/$userID')
+          // ignore: await_only_futures
           .putFile(await file);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {

@@ -32,9 +32,13 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
               }
 
               // Below is a method of obtaining saved image information.
+              // ignore: unused_local_variable
               var fileName = await ImageDownloader.findName(imageId);
+              // ignore: unused_local_variable
               var path = await ImageDownloader.findPath(imageId);
+              // ignore: unused_local_variable
               var size = await ImageDownloader.findByteSize(imageId);
+              // ignore: unused_local_variable
               var mimeType = await ImageDownloader.findMimeType(imageId);
             } on PlatformException catch (error) {
               print(error);

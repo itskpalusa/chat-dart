@@ -37,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       _userName = value;
     });
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
   }
 

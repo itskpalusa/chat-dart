@@ -186,6 +186,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final _firebaseStorage = FirebaseStorage.instance;
     final _imagePicker = ImagePicker();
     PickedFile image;
+    // ignore: unused_local_variable
     User firebaseUser = FirebaseAuth.instance.currentUser;
     String groupName = widget.groupName;
     String groupId = widget.groupId;
@@ -202,6 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
       var snapshot = await _firebaseStorage
           .ref()
           .child('attachments/$imageAttachmentName')
+          // ignore: await_only_futures
           .putFile(await file);
       var downloadUrl = await snapshot.ref.getDownloadURL();
       setState(() {
@@ -267,6 +269,7 @@ class _ChatScreenState extends State<ChatScreen> {
               // do something
               Navigator.of(context).push(
                 MaterialPageRoute(
+                  // ignore: await_only_futures
                   builder: await (context) => ChatSettings(
                       groupId: widget.groupId,
                       groupName: widget.groupName,

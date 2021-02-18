@@ -24,6 +24,7 @@ class PushScreen extends StatefulWidget {
 
 class _PushScreenState extends State<PushScreen> {
   String _homeScreenText = "Waiting for token...";
+  // ignore: unused_field
   String _messageText = "Waiting for message...";
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 

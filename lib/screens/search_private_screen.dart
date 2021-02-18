@@ -38,6 +38,7 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       _userName = value;
     });
+    // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
   }
 

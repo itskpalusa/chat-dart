@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/screens/chat_screen.dart';
 
+// ignore: must_be_immutable
 class GroupTile extends StatelessWidget {
   final String userName;
   final String groupId;

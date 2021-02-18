@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/authentication_screen.dart';
-import 'package:provider/provider.dart';
 import 'package:wiredash/wiredash.dart';
 
 void main() async {
