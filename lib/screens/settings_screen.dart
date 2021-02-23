@@ -203,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               textAlign: TextAlign.center,
             ),
             Text(
-              "Version 1.1.02",
+              "Version 1.1.04",
               textAlign: TextAlign.center,
             )
           ],
