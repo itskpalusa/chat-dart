@@ -11,11 +11,14 @@ import 'authentication_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:io';
 
+import 'edit_info_screen.dart';
+
 class SettingsScreen extends StatefulWidget {
   final String userName;
   final String email;
+  final String phone;
 
-  SettingsScreen({this.userName, this.email});
+  SettingsScreen({this.userName, this.email, this.phone});
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -164,6 +167,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(widget.email, style: TextStyle(fontSize: 17.0)),
               ],
             ),
+            Divider(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Phone', style: TextStyle(fontSize: 17.0)),
+                Text(widget.phone, style: TextStyle(fontSize: 17.0)),
+              ],
+            ),
             SizedBox(height: 15.0),
             ElevatedButton(
               onPressed: () => Wiredash.of(context).show(),
@@ -181,6 +192,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
             SizedBox(height: 15.0),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    // ignore: await_only_futures
+                    builder: await (context) => EditInformationScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: kSteelBlue, // background
+                onPrimary: Colors.white, // foreground
+              ),
+              child: Text(
+                'Edit Information',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 15),
             ElevatedButton(
               onPressed: () async {
                 await _auth.signOut();
