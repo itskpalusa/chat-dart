@@ -20,8 +20,28 @@ class DBService {
       'email': email,
       'groups': [],
       'conversations': [],
+      'contacts': [],
       'profilePic': '',
+      'phoneNumber': '',
       'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Update User Phone Number
+  Future setUserPhoneNumber(String phone) async {
+    userCollection
+        .doc(uid)
+        .set({"phoneNumber": phone}, SetOptions(merge: true));
+  }
+
+  // Add contact to user contact
+  Future addToContacts(String contactUserId, String contactName) async {
+    DocumentReference userDocRef = userCollection.doc(uid);
+
+    String contactFormat = contactUserId + "_" + contactName;
+
+    return await userDocRef.update({
+      'contacts': FieldValue.arrayUnion(['$contactFormat'])
     });
   }
 
