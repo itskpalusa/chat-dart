@@ -23,8 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final AuthService _auth = AuthService();
   User _user;
   String _groupName;
+
   // ignore: unused_field
   String _userName = '';
+
   // ignore: unused_field
   String _email = '';
   Stream _groups;
@@ -124,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
     );
+    await HelperFunctions.saveUserIDPreference(_user.uid);
   }
 
   String _destructureId(String res) {
