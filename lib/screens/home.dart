@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chat/helper/helper_functions.dart';
+import 'package:chat/screens/contacts_screen.dart';
 import 'package:chat/screens/conversations_home_screen.dart';
 import 'package:chat/screens/search_screen.dart';
 import 'package:chat/screens/settings_screen.dart';
@@ -18,17 +19,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
+
   // ignore: unused_field
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
   // ignore: unused_field
   final AuthService _auth = AuthService();
+
   // ignore: unused_field
   User _user;
   String _userName = '';
   String _email = '';
-
+  String _phone = '';
+String _uid = '';
   // initState
   @override
   void initState() {
@@ -52,6 +56,25 @@ class _HomeState extends State<Home> {
         _email = value;
       });
     });
+
+    await HelperFunctions.getUserPhoneSharedPreference().then((value) {
+      setState(() {
+        if (value != null) {
+          _phone = value;
+        } else {
+          _phone = "No Phone Number Given";
+        }
+      });
+    });
+    await HelperFunctions.getUIDSharedPreference().then((value) {
+      setState(() {
+        if (value != null) {
+          _uid = value;
+        } else {
+          _uid = "UID #";
+        }
+      });
+    });
   }
 
   int _currentIndex = 0;
@@ -70,7 +93,8 @@ class _HomeState extends State<Home> {
       HomeScreen(),
       ConversationHomeScreen(),
       SearchScreen(),
-      SettingsScreen(userName: _userName, email: _email),
+      ContactsScreen(),
+      SettingsScreen(userName: _userName, email: _email, phone: _phone),
     ];
     if (Platform.isIOS) {
       return CupertinoTabScaffold(
@@ -84,7 +108,7 @@ class _HomeState extends State<Home> {
               ),
               new BottomNavigationBarItem(
                 icon: Platform.isIOS
-                    ? Icon(CupertinoIcons.person_fill)
+                    ? Icon(CupertinoIcons.person)
                     : Icon(Icons.person),
                 label: 'Conversations',
               ),
@@ -93,6 +117,12 @@ class _HomeState extends State<Home> {
                     ? Icon(CupertinoIcons.search)
                     : Icon(Icons.search),
                 label: 'Search',
+              ),
+              new BottomNavigationBarItem(
+                icon: Platform.isIOS
+                    ? Icon(CupertinoIcons.book)
+                    : Icon(Icons.contacts),
+                label: 'Contact',
               ),
               new BottomNavigationBarItem(
                   icon: Platform.isIOS
@@ -113,7 +143,14 @@ class _HomeState extends State<Home> {
                 return SearchScreen();
                 break;
               case 3:
-                return SettingsScreen(userName: _userName, email: _email);
+                return ContactsScreen();
+                break;
+              case 4:
+                return SettingsScreen(
+                  userName: _userName,
+                  email: _email,
+                  phone: _phone,
+                );
                 break;
               default:
                 return HomeScreen();
@@ -140,6 +177,10 @@ class _HomeState extends State<Home> {
             new BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Search',
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.contacts),
+              label: 'Contacts',
             ),
             new BottomNavigationBarItem(
               icon: Icon(Icons.app_settings_alt_sharp),
