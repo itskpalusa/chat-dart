@@ -156,6 +156,11 @@ class DBService {
     return FirebaseFirestore.instance.collection("users").doc(uid).snapshots();
   }
 
+  // Get User Groups
+  getUserContacts() async {
+    return FirebaseFirestore.instance.collection("users").doc(uid).snapshots();
+  }
+
   // Send a Message
   sendMessage(String groupId, chatMessageData) {
     FirebaseFirestore.instance
