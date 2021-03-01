@@ -32,11 +32,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   // functions
   _getCurrentUserNameAndUid() async {
+    // ignore: await_only_futures
+    _user = await FirebaseAuth.instance.currentUser;
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       _userName = value;
     });
-    // ignore: await_only_futures
-    _user = await FirebaseAuth.instance.currentUser;
+
   }
 
   Future<String> getUserProfilePicUrl() async {
@@ -83,13 +84,28 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             child: Column(
               children: [
                 profilePicture,
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Text(
                   widget.userName,
                   style: TextStyle(fontSize: 20),
                 ),
                 //Button to chat with this user
                 //
+                ElevatedButton(
+                  onPressed: () async {
+                    DBService(uid: _user.uid).addToContacts(widget.userId, widget.userName);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: kSteelBlue, // background
+                    onPrimary: Colors.white, // foreground
+                  ),
+                  child: Text(
+                    'Add Contact',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     DBService().createConversation(
