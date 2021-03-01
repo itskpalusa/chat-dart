@@ -1,7 +1,5 @@
-import 'package:chat/helper/helper_functions.dart';
 import 'package:chat/screens/user_profile_screen.dart';
 import 'package:chat/services/db_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -37,14 +35,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
 
   Widget noContacts() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 20.0),
-          Text("No contacts"),
-        ],
+      child: Center(
+        child: Text("No contacts yet!",
+            textAlign: TextAlign.center, style: TextStyle(fontSize: 30)),
       ),
     );
   }
@@ -56,66 +49,68 @@ class _ContactsScreenState extends State<ContactsScreen> {
     return StreamBuilder(
       stream: _contacts,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.data['contacts'] != null) {
-          if (snapshot.data['contacts'].length != 0) {
-            var userDocument = snapshot.data;
-            List<String> contacts = List.from(userDocument['contacts']);
+        if (snapshot.hasData) {
+          if (snapshot.data['contacts'] != null) {
+            if (snapshot.data['contacts'].length != 0) {
+              var userDocument = snapshot.data;
+              List<String> contacts = List.from(userDocument['contacts']);
 
-            return Scaffold(
-              body: SafeArea(
-                child: ListView(
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: contacts.length,
-                      itemBuilder: (context, index) {
-                        // Get contact names
-                        //TODO: CAN YOU SAVE A list locally
+              return Scaffold(
+                body: SafeArea(
+                  child: ListView(
+                    children: <Widget>[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: contacts.length,
+                        itemBuilder: (context, index) {
+                          // Get contact names
+                          //TODO: CAN YOU SAVE A list locally
 
-                        // Return
-                        return Container(
-                          height: 40,
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: Theme.of(context).dividerColor))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => UserProfileScreen(
-                                        userName: contacts[index].substring(
-                                            contacts[index].indexOf("_") + 1),
-                                        userId: contacts[index].substring(
-                                            0, contacts[index].indexOf('_')),
+                          // Return
+                          return Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color:
+                                            Theme.of(context).dividerColor))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => UserProfileScreen(
+                                          userName: contacts[index].substring(
+                                              contacts[index].indexOf("_") + 1),
+                                          userId: contacts[index].substring(
+                                              0, contacts[index].indexOf('_')),
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                    contacts[index].substring(
-                                        contacts[index].indexOf("_") + 1),
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: -0.5)),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  ],
+                                    );
+                                  },
+                                  child: Text(
+                                      contacts[index].substring(
+                                          contacts[index].indexOf("_") + 1),
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: -0.5)),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              return noContacts();
+            }
           } else {
             return noContacts();
           }
