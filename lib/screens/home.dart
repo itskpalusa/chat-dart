@@ -32,7 +32,9 @@ class _HomeState extends State<Home> {
   String _userName = '';
   String _email = '';
   String _phone = '';
+  // ignore: unused_field
   String _uid = '';
+
   // initState
   @override
   void initState() {
