@@ -37,7 +37,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     await HelperFunctions.getUserNameSharedPreference().then((value) {
       _userName = value;
     });
-
   }
 
   Future<String> getUserProfilePicUrl() async {
@@ -93,7 +92,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 //
                 ElevatedButton(
                   onPressed: () async {
-                    DBService(uid: _user.uid).addToContacts(widget.userId, widget.userName);
+                    DBService(uid: _user.uid)
+                        .addToContacts(widget.userId, widget.userName);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: kSteelBlue, // background

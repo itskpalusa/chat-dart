@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   String _userName = '';
   String _email = '';
   String _phone = '';
-String _uid = '';
+  String _uid = '';
   // initState
   @override
   void initState() {
