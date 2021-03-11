@@ -2,9 +2,12 @@ import 'package:chat/screens/user_profile_screen.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:path_provider/path_provider.dart';
 import '../constants.dart';
-
+import 'dart:io';
+import 'dart:convert';
+import 'package:chat/helper/helper_functions.dart';
+import "package:collection/collection.dart";
 class ContactsScreen extends StatefulWidget {
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
@@ -13,6 +16,7 @@ class ContactsScreen extends StatefulWidget {
 class _ContactsScreenState extends State<ContactsScreen> {
   User _user;
   Stream _contacts;
+  List<String> justNames = [];
 
   // initState
   @override
@@ -24,10 +28,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
   _getUserAuth() async {
     // ignore: await_only_futures
     _user = await FirebaseAuth.instance.currentUser;
-    DBService(uid: _user.uid).getUserGroups().then(
-      (snapshots) {
+    DBService(uid: _user.uid).getUserContacts().then(
+      (value) {
         setState(() {
-          _contacts = snapshots;
+          _contacts = value;
         });
       },
     );
@@ -42,9 +46,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 
-  // TODO: FIX BUG WHERE USER CANT ENTER CONTACTS FIRST
-  // MAYBE UID?
-
   userContacts() {
     return StreamBuilder(
       stream: _contacts,
@@ -55,6 +56,18 @@ class _ContactsScreenState extends State<ContactsScreen> {
               var userDocument = snapshot.data;
               List<String> contacts = List.from(userDocument['contacts']);
 
+              for (int i = 0; i < contacts.length; i++) {
+                if (justNames.contains(
+                    contacts[i].substring(contacts[i].indexOf("_") + 1)))
+                  break;
+                else
+                  justNames
+                      .add(contacts[i].substring(contacts[i].indexOf("_") + 1));
+              }
+              justNames.sort(compareAsciiUpperCase);
+
+              print(justNames);
+
               return Scaffold(
                 body: SafeArea(
                   child: ListView(
@@ -63,10 +76,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         shrinkWrap: true,
                         itemCount: contacts.length,
                         itemBuilder: (context, index) {
-                          // Get contact names
-                          //TODO: CAN YOU SAVE A list locally
-
-                          // Return
                           return Container(
                             height: 40,
                             decoration: BoxDecoration(
@@ -91,8 +100,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                     );
                                   },
                                   child: Text(
-                                      contacts[index].substring(
-                                          contacts[index].indexOf("_") + 1),
+                                      justNames[index].substring(
+                                          justNames[index].indexOf("_") + 1),
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                           fontSize: 15.0,
@@ -134,3 +143,4 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 }
+
