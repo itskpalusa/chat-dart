@@ -34,6 +34,7 @@ class HelperFunctions {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUIDKey, userUID);
   }
+
   // Fetching Data from SharedPreferences
   static Future<bool> getUserLoggedInSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
