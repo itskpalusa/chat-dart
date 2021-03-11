@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       },
     );
-    await HelperFunctions.saveUserIDPreference(_user.uid);
+    await HelperFunctions.saveUserIDSharedPreference(_user.uid);
   }
 
   String _destructureId(String res) {
