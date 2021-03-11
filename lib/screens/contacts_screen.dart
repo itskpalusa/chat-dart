@@ -2,11 +2,8 @@ import 'package:chat/screens/user_profile_screen.dart';
 import 'package:chat/services/db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import '../constants.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:chat/helper/helper_functions.dart';
+
 import "package:collection/collection.dart";
 class ContactsScreen extends StatefulWidget {
   @override
