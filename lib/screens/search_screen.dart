@@ -59,6 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _showScaffold(String message) {
+    // ignore: deprecated_member_use
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       backgroundColor: Colors.blueAccent,
       duration: Duration(milliseconds: 1500),

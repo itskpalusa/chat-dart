@@ -45,7 +45,7 @@ class _ImageDetailScreenState extends State<ImageDetailScreen> {
             }
             BuildContext con = context;
             final snackBar = SnackBar(content: new Text("Saved Image"));
-            Scaffold.of(con).showSnackBar(snackBar);
+            ScaffoldMessenger.of(con).showSnackBar(snackBar);
             print('pop');
           },
         ),

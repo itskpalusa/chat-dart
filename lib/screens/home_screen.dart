@@ -144,13 +144,13 @@ class _HomeScreenState extends State<HomeScreen> {
     Widget cancelButton;
     Widget createButton;
     if (!Platform.isIOS) {
-      cancelButton = FlatButton(
+      cancelButton = TextButton(
         child: Text("Cancel"),
         onPressed: () {
           Navigator.of(context).pop();
         },
       );
-      createButton = FlatButton(
+      createButton = TextButton(
         child: Text("Create"),
         onPressed: () async {
           if (_groupName != null) {

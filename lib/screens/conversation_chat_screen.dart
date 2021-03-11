@@ -194,7 +194,6 @@ class _ConversationChatScreenState extends State<ConversationChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text(widget.otherUserName),
         backgroundColor: kPortGoreBackground,
