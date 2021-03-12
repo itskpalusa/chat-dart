@@ -46,10 +46,10 @@ workflows:
       - app-store-connect fetch-signing-files "com.dashstrap.chat" --type IOS_APP_STORE
         --create
       - keychain add-certificates
-      - cd . && flutter build ios --debug --no-codesign
-      - xcode-project use-profiles
-      - cd . && xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme
-        "Runner"
+     # - cd . && flutter build ios --debug --no-codesign
+    #  - xcode-project use-profiles
+     # - cd . && xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme
+     #   "Runner"
     artifacts:
       - build/**/outputs/**/*.apk
       - build/**/outputs/**/*.aab
