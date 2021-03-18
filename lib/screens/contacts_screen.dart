@@ -64,7 +64,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
               }
               justNames.sort(compareAsciiUpperCase);
 
-              print(justNames);
 
               return Scaffold(
                 body: SafeArea(
