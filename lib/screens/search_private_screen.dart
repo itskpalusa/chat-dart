@@ -60,7 +60,6 @@ class _SearchPrivateScreenState extends State<SearchPrivateScreen> {
   }
 
   void _showScaffold(String message) {
-    // ignore: deprecated_member_use
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       backgroundColor: kPortGoreBackground,
       duration: Duration(milliseconds: 1500),

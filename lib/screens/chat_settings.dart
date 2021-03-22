@@ -238,7 +238,7 @@ class _ChatSettingsState extends State<ChatSettings> {
 
         final groupId = userDocument["groupId"];
         return Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomPadding: false,
           body: SafeArea(
             child: ListView(
               children: <Widget>[

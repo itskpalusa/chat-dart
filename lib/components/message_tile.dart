@@ -153,7 +153,7 @@ class _MessageTileState extends State<MessageTile> {
           } else {
             BuildContext con = context;
             final snackBar = SnackBar(content: new Text("No image to expand"));
-            ScaffoldMessenger.of(con).showSnackBar(snackBar);
+            Scaffold.of(con).showSnackBar(snackBar);
           }
         },
         onDoubleTap: () {
@@ -172,7 +172,7 @@ class _MessageTileState extends State<MessageTile> {
           );
           BuildContext con = context;
           final snackBar = SnackBar(content: new Text("Copied!"));
-          ScaffoldMessenger.of(con).showSnackBar(snackBar);
+          Scaffold.of(con).showSnackBar(snackBar);
         },
         child: SafeArea(
             child: Container(

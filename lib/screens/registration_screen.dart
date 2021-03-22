@@ -165,7 +165,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           SizedBox(
                             width: double.infinity,
                             height: 50.0,
-                            // ignore: deprecated_member_use
                             child: RaisedButton(
                                 elevation: 0.0,
                                 color: Colors.blue,
