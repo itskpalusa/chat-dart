@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 import "package:collection/collection.dart";
+
 class ContactsScreen extends StatefulWidget {
   @override
   _ContactsScreenState createState() => _ContactsScreenState();
@@ -63,7 +64,6 @@ class _ContactsScreenState extends State<ContactsScreen> {
               }
               justNames.sort(compareAsciiUpperCase);
 
-              print(justNames);
 
               return Scaffold(
                 body: SafeArea(
@@ -140,4 +140,3 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 }
-

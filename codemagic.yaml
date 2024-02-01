@@ -3,7 +3,7 @@
 
 workflows:
   default-workflow:
-    name: Default Workflow
+    name: Main Branch Workflow
     max_build_duration: 60
     environment:
       vars:
@@ -48,8 +48,8 @@ workflows:
       - keychain add-certificates
       - cd . && flutter build ios --debug --no-codesign
       - xcode-project use-profiles
-      - cd . && xcode-project build-ipa --workspace "ios/Runner.xcworkspace" --scheme
-        "Runner"
+      - flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+      - xcode-project build-ipa --workspace ios/Runner.xcworkspace --scheme Runner
     artifacts:
       - build/**/outputs/**/*.apk
       - build/**/outputs/**/*.aab
