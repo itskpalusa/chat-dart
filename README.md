@@ -1,7 +1,6 @@
 # Chat
 
-A group communication platform.
+A group communication platform designed for both iOS and Android. 
+Was used during the Spring of 2021 at Colorado State University. 
 
-Latest Production Build Status: [![Codemagic build status](https://api.codemagic.io/apps/60174be29e376a245c4ea308/60174be29e376a245c4ea307/status_badge.svg)](https://codemagic.io/apps/60174be29e376a245c4ea308/60174be29e376a245c4ea307/latest_build)
-
-[![Dart](https://github.com/itskpalusa/chat-dart/actions/workflows/dart.yml/badge.svg?branch=main)](https://github.com/itskpalusa/chat-dart/actions/workflows/dart.yml)
+Developed by Karthik Palusa using mainly Dart and Swift.
